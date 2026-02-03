@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@civictechie - Open Source Civic Tech Projects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            text-align: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .username {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .bio {
+            color: #495057;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+
+        .location::before {
+            content: "📍";
+        }
+
+        /* Projects Section */
+        .projects-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h1 {
+            color: #1e3c72;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        /* Project Cards */
+        .project-cards {
+            display: grid;
+            gap: 25px;
+        }
+
+        .project-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .project-card h2 {
+            color: #1e3c72;
+            font-size: 1.5em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-card h2::after {
+            content: "→";
+            font-size: 1.2em;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover h2::after {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .project-card p {
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge.purple {
+            background: #764ba2;
+        }
+
+        .badge.blue {
+            background: #4e73df;
+        }
+
+        .badge.green {
+            background: #1cc88a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .profile-card,
+            .projects-section {
+                padding: 25px;
+            }
+
+            .section-header h1 {
+                font-size: 1.8em;
+            }
+
+            .project-card {
+                padding: 20px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Card (Left Aside) -->
+        <aside class="profile-card">
+            <div class="avatar">👩‍💻</div>
+            <h2 class="username">@civictechie</h2>
+            <p class="bio">Hi, I build open source apps. I love pizza and code.</p>
+            <div class="location">New York City</div>
+        </aside>
+
+        <!-- Projects Section (Right Main Content) -->
+        <main class="projects-section">
+            <div class="section-header">
+                <h1>Projects</h1>
+                <p>Building civic tech solutions for communities</p>
+            </div>
+
+            <div class="project-cards">
+                <!-- Project 1: The Bridge Bot -->
+                <a href="#" class="project-card">
+                    <h2>🌉 The Bridge Bot Project</h2>
+                    <p>This project is a chat AI assistant for families of kids with Autism. The bot helps bridge communication gaps, provides resources, and offers support for parents and caregivers navigating the journey.</p>
+                    <div class="project-meta">
+                        <span class="badge">AI Assistant</span>
+                        <span class="badge purple">Healthcare</span>
+                        <span class="badge blue">Accessibility</span>
+                    </div>
+                </a>
+
+                <!-- Project 2: Equitable Mapping Design Challenge -->
+                <a href="#" class="project-card">
+                    <h2>🗺️ Equitable Mapping Design Challenge</h2>
+                    <p>A full day hackathon by 2025 Cohort Fellows for Civic Tech Camp. Submitted proposals were posted on this collaborative platform where teams worked to address mapping inequality and improve geographic data representation in underserved communities.</p>
+                    <div class="project-meta">
+                        <span class="badge">Hackathon</span>
+                        <span class="badge green">Mapping</span>
+                        <span class="badge purple">Equity</span>
+                    </div>
+                </a>
+
+                <!-- Project 3: NYC 311 Chat Assistant -->
+                <a href="nyc-311-chat-assistant.html" class="project-card">
+                    <h2>🗽 NYC 311 Chat Assistant</h2>
+                    <p>Project Brief created for the educational chatbot building workshop. A comprehensive implementation plan for an AI-powered chat assistant to help NYC residents report non-emergency issues, access city services, and get information 24/7.</p>
+                    <div class="project-meta">
+                        <span class="badge">Chatbot</span>
+                        <span class="badge blue">Civic Services</span>
+                        <span class="badge green">NYC</span>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>Built with ❤️ for <strong>opencivic.tech</strong> by <strong>Femmecubator</strong></p>
+    </footer>
+</body>
+</html>
