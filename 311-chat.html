@@ -3,30 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYC 311 Chat Assistant - Project Implementation Plan</title>
+    <title>NYC 311 Chat Assistant Project Wiki</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
-        .container {
-            max-width: 1200px;
+        .shell {
+            max-width: 1300px;
             margin: 0 auto;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
         }
 
         header {
@@ -34,1333 +31,1042 @@
             color: white;
             padding: 40px;
             text-align: center;
+            flex-shrink: 0;
         }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; font-weight: 700; }
+        header p  { font-size: 1.2em; opacity: 0.9; color: white; }
 
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
+        .body-layout { display: flex; flex: 1; }
 
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-            color: white;
-        }
-
-        .nav-tabs {
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            background: #1e3c72;
             display: flex;
-            flex-wrap: wrap;
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            padding: 0 20px;
-            overflow-x: auto;
+            flex-direction: column;
+            padding: 24px 0;
         }
-
-        .nav-tab {
-            padding: 15px 25px;
+        .sidebar-label {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0 24px 10px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 24px;
             cursor: pointer;
             border: none;
             background: transparent;
-            font-size: 0.95em;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .nav-tab:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-        }
-
-        .nav-tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-            background: white;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.4s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: #1e3c72;
-            font-size: 2em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-        }
-
-        h3 {
-            color: #2a5298;
-            font-size: 1.5em;
-            margin: 30px 0 15px 0;
-        }
-
-        h4 {
-            color: #495057;
-            font-size: 1.2em;
-            margin: 20px 0 10px 0;
-        }
-
-        p {
-            margin-bottom: 15px;
-            color: #495057;
-        }
-
-        ul, ol {
-            margin: 15px 0 15px 30px;
-            color: #495057;
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-
-        .code-block {
-            position: relative;
-            margin: 20px 0;
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: #e9ecef;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .code-label {
-            font-weight: 600;
-            color: #495057;
-            font-size: 0.9em;
-        }
-
-        .copy-btn {
-            padding: 6px 14px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
-        }
-
-        .copy-btn:hover {
-            background: #5568d3;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .copy-btn.copied {
-            background: #28a745;
-        }
-
-        .copy-icon {
-            width: 16px;
-            height: 16px;
-        }
-
-        pre {
-            margin: 0;
-            padding: 20px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            line-height: 1.5;
-            color: #212529;
-        }
-
-        .highlight {
-            background: #fff3cd;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
-        .card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .metric-card h4 {
-            color: white;
-            margin: 0 0 10px 0;
-            font-size: 1em;
-            opacity: 0.9;
-        }
-
-        .metric-card .value {
-            font-size: 2em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #667eea;
-            color: white;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
-
-        .badge.success { background: #28a745; }
-        .badge.warning { background: #ffc107; color: #212529; }
-        .badge.danger { background: #dc3545; }
-        .badge.info { background: #17a2b8; }
-
-        .flow-diagram {
-            background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .step {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed #dee2e6;
-        }
-
-        .step:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .step-number {
-            background: #667eea;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            flex-shrink: 0;
-            margin-right: 20px;
-        }
-
-        .step-content {
-            flex: 1;
-        }
-
-        .step-title {
-            font-weight: 700;
-            color: #1e3c72;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th, td {
-            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            width: 100%;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.95em;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .nav-item.active { background: rgba(255,255,255,0.12); color: white; border-left-color: #667eea; }
+        .nav-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1em; flex-shrink: 0;
+            background: rgba(255,255,255,0.1);
+        }
+        .nav-item.active .nav-icon { background: #667eea; }
+        .nav-text { line-height: 1.3; }
+        .nav-sub { font-size: 0.75em; opacity: 0.6; display: block; }
+        .sidebar-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 14px 24px; }
+
+        /* MAIN */
+        .main { flex: 1; overflow-y: auto; }
+        .page { display: none; padding: 40px 48px; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        .placeholder-page { padding: 0; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(8px); }
+            to   { opacity: 1; transform: translateX(0); }
         }
 
-        th {
-            background: #f8f9fa;
-            font-weight: 700;
-            color: #1e3c72;
+        /* HOME */
+        .home-hero { padding: 60px 50px 30px; border-bottom: 1px solid #eee; }
+        .home-hero h2 { font-size: 2em; color: #1e3c72; margin-bottom: 10px; }
+        .home-hero p  { color: #6c757d; font-size: 1.05em; }
+        .artifact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 20px;
+            padding: 36px 50px;
+        }
+        .artifact-card {
+            border: 1.5px solid #e9ecef; border-radius: 12px;
+            padding: 24px; cursor: pointer; transition: all 0.2s;
+        }
+        .artifact-card:hover { border-color: #667eea; box-shadow: 0 4px 20px rgba(102,126,234,0.15); transform: translateY(-2px); }
+        .card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4em; margin-bottom: 16px;
+            color: white; font-weight: 700;
+        }
+        .artifact-card h3 { font-size: 1em; font-weight: 700; color: #1e3c72; margin-bottom: 6px; }
+        .artifact-card p  { font-size: 0.88em; color: #6c757d; line-height: 1.5; }
+        .card-tag {
+            display: inline-block; margin-top: 14px; padding: 3px 10px;
+            background: #f0f2ff; color: #667eea;
+            font-size: 0.78em; font-weight: 600; border-radius: 20px;
         }
 
-        tr:hover {
-            background: #f8f9fa;
-        }
+        /* PLACEHOLDER PAGES */
+        .placeholder-page h2 { font-size: 2em; color: #1e3c72; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 3px solid #667eea; }
+        .placeholder-page > p { color: #6c757d; margin-top: 20px; font-size: 1.05em; }
+        .empty-state { margin-top: 50px; display: flex; flex-direction: column; align-items: center; gap: 14px; color: #adb5bd; }
+        .empty-icon { font-size: 3em; }
+        .empty-state p { font-size: 1em; margin: 0; }
 
-        footer {
-            background: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #dee2e6;
-            color: #6c757d;
+        /* ARTIFACT 1 INNER TABS */
+        .inner-tabs {
+            display: flex; flex-wrap: wrap;
+            background: #f8f9fa; border-bottom: 2px solid #dee2e6;
+            padding: 0 20px; overflow-x: auto;
+            position: sticky; top: 0; z-index: 10;
         }
+        .inner-tab {
+            padding: 14px 20px; cursor: pointer; border: none;
+            background: transparent; font-size: 0.88em; font-weight: 600;
+            color: #495057; border-bottom: 3px solid transparent;
+            transition: all 0.2s; white-space: nowrap;
+            text-decoration: none; display: inline-block;
+        }
+        .inner-tab:hover { background: rgba(102,126,234,0.08); color: #667eea; }
+        .inner-tab.active { color: #667eea; border-bottom-color: #667eea; background: white; }
+
+        .inner-section { display: none; padding: 36px 40px; }
+        .inner-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* CONTENT STYLES */
+        h2.sec { color: #1e3c72; font-size: 1.85em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        h3 { color: #2a5298; font-size: 1.35em; margin: 26px 0 12px; }
+        h4 { color: #495057; font-size: 1.1em; margin: 16px 0 8px; }
+        p  { margin-bottom: 13px; color: #495057; line-height: 1.7; }
+        ul, ol { margin: 10px 0 10px 26px; color: #495057; }
+        li { margin-bottom: 6px; }
+
+        .card { background: #f8f9fa; padding: 18px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #667eea; }
+
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin: 16px 0; }
+        .metric-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .metric-card h4 { color: white; margin: 0 0 8px; font-size: 0.9em; opacity: 0.9; }
+        .metric-card .value { font-size: 1.85em; font-weight: 700; margin-bottom: 4px; }
+        .metric-card p { color: rgba(255,255,255,0.85); font-size: 0.82em; margin: 0; }
+
+        .code-block { margin: 16px 0; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #e9ecef; border-bottom: 1px solid #dee2e6; }
+        .code-label { font-weight: 600; color: #495057; font-size: 0.86em; }
+        .copy-btn { padding: 5px 11px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: all 0.2s; }
+        .copy-btn:hover { background: #5568d3; }
+        .copy-btn.copied { background: #28a745; }
+        .copy-icon { width: 13px; height: 13px; }
+        pre { margin: 0; padding: 16px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.87em; line-height: 1.55; color: #212529; }
+
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 11px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #f8f9fa; font-weight: 700; color: #1e3c72; }
+        tr:hover { background: #f8f9fa; }
+
+        .flow-diagram { background: white; border: 2px solid #dee2e6; border-radius: 8px; padding: 18px; margin: 16px 0; }
+        .step { display: flex; align-items: flex-start; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed #dee2e6; }
+        .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .step-number { background: #667eea; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; margin-right: 16px; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 700; color: #1e3c72; margin-bottom: 8px; font-size: 1.02em; }
+
+        footer { background: #f8f9fa; padding: 24px 30px; text-align: center; border-top: 1px solid #dee2e6; color: #6c757d; font-size: 0.9em; flex-shrink: 0; }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            header h1 {
-                font-size: 1.8em;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            .nav-tab {
-                padding: 12px 15px;
-                font-size: 0.85em;
-            }
-
-            .metric-grid {
-                grid-template-columns: 1fr;
-            }
+            .body-layout { flex-direction: column; }
+            .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; padding: 8px 0; }
+            .sidebar-label, .sidebar-divider { display: none; }
+            .nav-item { padding: 8px 14px; font-size: 0.82em; }
+            .nav-sub { display: none; }
+            .home-hero, .artifact-grid, .placeholder-page { padding: 0; }
+            .page { padding: 24px; }
+            .inner-section { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🗽 NYC 311 Chat Assistant</h1>
-            <p>An opencivic.tech project by Femmecubator</p>
-        </header>
+<div class="shell">
 
-        <nav class="nav-tabs">
-            <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
-            <button class="nav-tab" onclick="showSection('usecase')">Use Case</button>
-            <button class="nav-tab" onclick="showSection('entrypoints')">Entry Points</button>
-            <button class="nav-tab" onclick="showSection('intents')">User Intents</button>
-            <button class="nav-tab" onclick="showSection('responses')">Bot Responses</button>
-            <button class="nav-tab" onclick="showSection('happypath')">Happy Path</button>
-            <button class="nav-tab" onclick="showSection('edgecases')">Edge Cases</button>
-            <button class="nav-tab" onclick="showSection('questions')">FAQ</button>
-            <button class="nav-tab" onclick="showSection('resources')">Resources</button>
+    <header>
+        <h1>🗽 NYC 311 Chat Assistant Project Wiki</h1>
+        <p>An opencivic.tech project by Femmecubator</p>
+    </header>
+
+    <div class="body-layout">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="sidebar-label">Main</div>
+
+            <button class="nav-item active" onclick="showPage('home', this)">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Home<span class="nav-sub">Project Workspace</span></span>
+            </button>
+
+            <button class="nav-item" onclick="showPage('pageC', this)">
+                <span class="nav-icon">🎓</span>
+                <span class="nav-text">Workshop Materials<span class="nav-sub">Resources</span></span>
+            </button>
+
+            <hr class="sidebar-divider">
+            <div class="sidebar-label">Research</div>
+
+            <button class="nav-item" onclick="showPage('artifact1', this)">
+                <span class="nav-icon">📄</span>
+                <span class="nav-text">Artifact 1<span class="nav-sub">Project Brief</span></span>
+            </button>
+
+            <button class="nav-item" onclick="showPage('pageA', this)">
+                <span class="nav-icon">📚</span>
+                <span class="nav-text">Artifact 2<span class="nav-sub">Design Canvas</span></span>
+            </button>
+
+            <button class="nav-item" onclick="showPage('pageB', this)">
+                <span class="nav-icon">✍️</span>
+                <span class="nav-text">Artifact 3<span class="nav-sub">Content Library</span></span>
+            </button>
+
+            <button class="nav-item" onclick="showPage('pageD', this)">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-text">Artifact 4<span class="nav-sub">Research Files</span></span>
+            </button>
         </nav>
 
-        <div class="content">
-            <!-- OVERVIEW SECTION -->
-            <section id="overview" class="section active">
-                <h2>1. Project Brief</h2>
-                
-                <p><strong>Project Name:</strong> NYC 311 AI Chat Assistant</p>
-                
-                <p><strong>Objective:</strong> Develop an intelligent conversational assistant to supplement NYC's 311 service by enabling residents to report non-emergency incidents, request city services, and access information through natural language conversation.</p>
+        <!-- MAIN CONTENT -->
+        <div class="main">
 
-                <h3>Core Functions</h3>
-                <div class="card">
-                    <ul>
-                        <li>Collect and process incident reports (potholes, noise complaints, sanitation issues, etc.)</li>
-                        <li>Provide information about city services and programs</li>
-                        <li>Track existing 311 requests</li>
-                        <li>Route urgent issues appropriately</li>
-                        <li>Offer multilingual support for NYC's diverse population</li>
-                    </ul>
+            <!-- HOME -->
+            <div id="home" class="page active">
+                <div class="home-hero">
+                    <h2>Project Workspace</h2>
+                    <p style="font-weight:700; color:#1e3c72; margin-bottom:6px;">What is this wiki for?</p>
+                    <p>This wiki serves as a resource space and companion document for the Conversational AI design sprint hosted by Femmecubator and Superbloom Design.</p>
+                    <p style="font-weight:700; color:#1e3c72; margin-top:20px; margin-bottom:6px;">What You'll Learn:</p>
+                    <p>In this beginner-friendly course, you'll get an introduction on Voice UX research and design methods, and practice deploying the bot through Voiceflow. Workshop facilitators will host activities while working through building the NYC 311 Chat AI Assistant sandbox, an educational initiative within the <a href="https://opencivic.tech/" target="_blank" style="color:#667eea; font-weight:600; text-decoration:none;">Open Civic Tech Project</a>.</p>
                 </div>
-
-                <h3>Success Metrics</h3>
-                <div class="metric-grid">
-                    <div class="metric-card">
-                        <h4>Call Center Volume</h4>
-                        <div class="value">↓ 30%</div>
-                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9em;">Target reduction</p>
+                <div class="artifact-grid">
+                    <div class="artifact-card" onclick="navTo('artifact1')">
+                        <div class="card-icon">📄</div>
+                        <h3>Artifact 1 — Project Brief</h3>
+                        <p>Full implementation plan: overview, use cases, entry points, user intents, bot responses, happy path, edge cases, FAQ, and resources.</p>
+                        <span class="card-tag">9 sections</span>
                     </div>
-                    <div class="metric-card">
-                        <h4>Report Completion</h4>
-                        <div class="value">< 3 min</div>
-                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9em;">Average time</p>
+                    <div class="artifact-card" onclick="navTo('pageA')">
+                        <div class="card-icon" style="background:linear-gradient(135deg,#43c6ac,#191654);">📚</div>
+                        <h3>Artifact 2 — Design Canvas</h3>
+                        <p>Contains example prompts that participants can use during the workshop.</p>
+                        <span class="card-tag" style="background:#f0fff4;color:#28a745;">Workshop Resource</span>
                     </div>
-                    <div class="metric-card">
-                        <h4>User Satisfaction</h4>
-                        <div class="value">85%+</div>
-                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9em;">Target score</p>
+                    <div class="artifact-card" onclick="navTo('pageB')">
+                        <div class="card-icon" style="background:linear-gradient(135deg,#f7971e,#ffd200);">✍️</div>
+                        <h3>Artifact 3 — Content Library</h3>
+                        <p>Opens the Content Style Guide document in Google Docs.</p>
+                        <span class="card-tag" style="background:#fff8e1;color:#e09000;">↗ Google Docs</span>
                     </div>
-                    <div class="metric-card">
-                        <h4>Languages Supported</h4>
-                        <div class="value">200+</div>
-                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9em;">Multilingual access</p>
+                    <div class="artifact-card" onclick="navTo('pageD')">
+                        <div class="card-icon" style="background:linear-gradient(135deg,#1a8a5a,#43c6ac);">🔍</div>
+                        <h3>Artifact 4 — Research Files</h3>
+                        <p>Desk research, bot persona, and sample dialogue resources.</p>
+                        <span class="card-tag" style="background:#f0fff8;color:#1a8a5a;">3 files</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- USE CASE SECTION -->
-            <section id="usecase" class="section">
-                <h2>2. Use Case</h2>
+            <!-- ARTIFACT 1 -->
+            <div id="artifact1" class="page" style="padding:0;">
+                <div class="inner-tabs">
+                    <a href="#pb-purpose" class="inner-tab active" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Purpose</a>
+                    <a href="#pb-usecase" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Use Case</a>
+                    <a href="#pb-entry" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Entry Points</a>
+                    <a href="#pb-intents" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">User Intents</a>
+                    <a href="#pb-responses" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Bot Responses</a>
+                    <a href="#pb-happypath" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Happy Path</a>
+                    <a href="#pb-edge" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Edge Cases</a>
+                    <a href="#pb-faq" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">FAQ</a>
+                    <a href="#pb-resources" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Resources</a>
+                </div>
+                <div style="padding:40px 48px;">
 
-                <h3>Deployment Platforms</h3>
-                <div class="card">
-                    <ul>
-                        <li><strong>NYC.gov website</strong> - Embedded chat widget on all pages</li>
-                        <li><strong>NYC311 Mobile App</strong> - Native chat interface (iOS/Android)</li>
-                        <li><strong>SMS/Text messaging</strong> - Text-based interaction for accessibility</li>
-                        <li><strong>WhatsApp/Facebook Messenger</strong> - Integration with popular messaging platforms</li>
-                        <li><strong>Voice assistants</strong> - Future integration with Alexa/Google Home</li>
-                    </ul>
+                        <section id="pb-purpose">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">1. Purpose</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">Purpose</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>NYC 311 Chat Assistant — A conversational AI helper for New York City's
+non-emergency service system.
+
+Core Capabilities
+   Incident Reporting — Help NYC residents report local issues
+   (potholes, noise complaints, graffiti, illegal parking, etc.)
+
+   Status Tracking — Check on existing 311 requests, track status
+   of previous reports submitted by residents
+
+   Educate — Provide information about city services, departments,
+   and how to access resources
+
+Primary Users
+   NYC residents reporting local issues
+   Property owners managing maintenance concerns
+   Visitors seeking city information
+   Community advocates tracking neighborhood issues</pre></div>
+                        </section>
+
+                        <section id="pb-usecase" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">2. Use Case</h2>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Deployment Channels</h3>
+                            <p><strong>NYC 311 Mobile App</strong> — Primary integration within existing app. <strong>NYC.gov/311 Website</strong> — Embedded chat widget on the 311 portal. <strong>SMS/Text</strong> — Text-based access via existing 311 SMS number. <strong>Smart City Kiosks</strong> — Touch-enabled interface at LinkNYC kiosks.</p>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Context &amp; Value</h3>
+                            <p>The chatbot provides 24/7 access to 311 services, reducing wait times for phone support and making it easier for residents to report issues in multiple languages. It guides users through the reporting process with contextual questions, validates information in real-time, and provides immediate confirmation and tracking numbers.</p>
+                        </section>
+
+                        <section id="pb-entry" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">3. Entry Points</h2>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Digital Channels</h3>
+                            <p>Direct access through NYC 311 app home screen ("Chat with 311" button), website chat bubble on nyc.gov/311, SMS keyword trigger (text "HELP" to 311-NYC), and voice assistant integration ("Alexa, open NYC 311").</p>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Referrals &amp; Links</h3>
+                            <p>Social media campaigns with direct chat links, email notifications with "Check Status" chat links, and community board websites and local blogs.</p>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Physical Materials</h3>
+                            <p>QR codes on street furniture and public spaces, QR codes on 311 mailers and flyers, signage at city service centers, and printed on utility bills and city communications.</p>
+                        </section>
+
+                        <section id="pb-intents" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">4. User Intent Examples</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">User Intent Examples</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>Reporting Intents
+   "There's a pothole on my street"
+   "I need to report illegal dumping"
+   "My neighbor's dog won't stop barking"
+   "There's a broken streetlight"
+   "Someone parked in front of a fire hydrant"
+
+Status / Tracking Intents
+   "Where's my complaint?"
+   "What happened to my noise complaint from last week?"
+   "Check status of service request #C1-1-2345678"
+   "Has anyone fixed the pothole I reported?"
+
+Informational Intents
+   "What can I report to 311?"
+   "How do I get a birth certificate?"
+   "When is alternate side parking suspended?"
+   "What are the rules about construction noise?"
+   "How do I apply for SNAP benefits?"
+
+Service Discovery
+   "I need help with my rent"
+   "Where's the nearest vaccination site?"
+   "How do I register to vote?"
+   "What recycling services are available?"</pre></div>
+                        </section>
+
+                        <section id="pb-responses" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">5. Bot Responses</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">Bot Responses</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>Empathetic Tone
+   "I understand how disruptive noise can be, especially late at night.
+   Let me help you file a complaint right now."
+
+   "I'm sorry you're dealing with this. We'll get your report
+   submitted to the right department."
+
+Informational Tone
+   "311 accepts complaints about noise between 10 PM and 7 AM on weekdays.
+   Here's what you need to report..."
+
+   "The Department of Transportation typically responds to pothole
+   reports within 30 days."
+
+Actionable Tone
+   "To report this issue, I'll need a few details.
+   First, what's the address or nearest cross street?"
+
+   "Great! I've submitted your complaint. Your service request number
+   is C1-1-2345678. Would you like to save this number or receive
+   updates via text?"
+
+Response Structure
+   1. Lead with acknowledgment
+   2. Provide clear, scannable information
+   3. End with a specific next step or question
+   4. Offer alternatives when applicable</pre></div>
+                        </section>
+
+                        <section id="pb-happypath" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">6. Happy Path Flow</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">Scenario: Reporting a Pothole</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>1. User Entry
+   "There's a huge pothole on my street"
+
+2. Bot Acknowledgment
+   "I can help you report that pothole. Let me get some details so we
+   can send it to the Department of Transportation."
+
+3. Information Gathering
+   "What's the address or nearest intersection?" → User provides location
+   "Can you describe the size? (Small, medium, large)" → User selects option
+   "Is it causing a hazard to traffic or pedestrians?" → User confirms
+
+4. Optional Photo Upload
+   "Would you like to upload a photo? It helps the repair crew."
+   → User uploads or skips
+
+5. Confirmation &amp; Review
+   Location: 123 Main St, Brooklyn
+   Issue: Large pothole causing traffic hazard
+   Photo: Attached
+   "Does this look correct?"
+
+6. Submission &amp; Tracking
+   Service Request: C1-1-2345678
+   Expected response: 30 days
+   Track via 311 app or by sharing the SR number.
+
+7. Closure
+   "You're all set! Thanks for helping keep NYC streets safe."</pre></div>
+                        </section>
+
+                        <section id="pb-edge" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">7. Edge Cases</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">Edge Cases</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>User in Distress
+   Trigger: "someone is hurt," "fire," "crime in progress"
+   Response: "This sounds like an emergency. Please call 911 immediately
+   for urgent help. I can only assist with non-emergency issues."
+
+Beyond Bot Scope
+   Examples: "How do I sue the city?" "I need to renew my passport"
+   Response: "I can help with NYC city services, but this falls outside
+   my area. Here's who can help: [specific resource/department]"
+
+Ambiguous Queries
+   Example: "There's a problem on my block"
+   Response: Offer category options — street/sidewalk issue,
+   noise or quality-of-life complaint, or something else.
+
+Location Uncertainty
+   Response: "No problem! Can you tell me the nearest cross streets,
+   a nearby landmark or business, or enable location services and
+   I'll use your current location."
+
+Repeat User Frustration
+   Detection: "again," "still not fixed," "I already reported this"
+   Response: Search by address, then escalate to constituent
+   services if unresolved.
+
+Language Barrier
+   Prompt: "Need help in another language? / ¿Necesita ayuda en español?"
+   Action: Switch to supported language or provide multilingual
+   phone support number.</pre></div>
+                        </section>
+
+                        <section id="pb-faq" style="margin-top:52px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">8. Anticipated Questions</h2>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Early Journey</h3>
+                            <ul>
+                                <li>"What is 311?"</li>
+                                <li>"What can you help me with?"</li>
+                                <li>"Can I report noise complaints?"</li>
+                                <li>"Do you speak Spanish?"</li>
+                                <li>"Is this free?"</li>
+                            </ul>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">During Reporting</h3>
+                            <ul>
+                                <li>"Do I need to give my name?"</li>
+                                <li>"Will this be anonymous?"</li>
+                                <li>"How long does it take?"</li>
+                                <li>"What happens after I submit this?"</li>
+                                <li>"What if I don't know the exact address?"</li>
+                            </ul>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">After Submission</h3>
+                            <ul>
+                                <li>"Did you get my complaint?"</li>
+                                <li>"When will this be fixed?"</li>
+                                <li>"How do I check the status?"</li>
+                                <li>"Can I cancel my complaint?"</li>
+                                <li>"What if nothing happens?"</li>
+                            </ul>
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Service-Specific</h3>
+                            <ul>
+                                <li><strong>Sanitation:</strong> "When is trash pickup?" · "How do I schedule bulk item pickup?"</li>
+                                <li><strong>Transportation:</strong> "When is alternate side parking?" · "How do I request a speed bump?"</li>
+                                <li><strong>Housing:</strong> "How do I report a bad landlord?" · "My heat isn't working"</li>
+                                <li><strong>Quality of Life:</strong> "What are the noise rules?" · "How late can construction go?"</li>
+                            </ul>
+                        </section>
+
+                        <section id="pb-resources" style="margin-top:52px; margin-bottom:80px;">
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">9. Helpful Information the Bot Provides</h2>
+                            <div class="code-block"><div class="code-header"><span class="code-label">Helpful Information</span><button class="copy-btn" onclick="copyCode(this)"><svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button></div><pre>Explanations &amp; Definitions
+   What 311 is and how it differs from 911
+   Service request lifecycle (submitted → in progress → resolved → closed)
+   Department jurisdictions (who handles what)
+   Response time expectations by category
+   Legal rights and city codes (noise ordinances, housing laws, etc.)
+
+Support Resources &amp; Escalation
+   Department of Sanitation: phone, email, website
+   Department of Transportation: contact methods
+   NYPD (non-emergency): community affairs
+   City Council member lookup by address
+   Multilingual support: Language line numbers
+   Crisis resources: mental health, domestic violence, homelessness services
+
+Accessibility &amp; Privacy
+   Screen reader compatibility, text size adjustment, voice input/output
+   Simple language mode and visual alternatives
+   Clear opt-in for contact information, anonymous reporting option
+   Data retention policies explained, GDPR/privacy compliance messaging</pre></div>
+                        </section>
+
+                </div>
+            </div><!-- /artifact1 -->
+
+            <!-- SECTION A -->
+            <div id="pageA" class="page" style="padding:0;">
+                <div class="inner-tabs">
+                    <button class="inner-tab active" onclick="showInner2('settingscene', this)">Setting the Scene</button>
+                    <button class="inner-tab" onclick="showInner2('userneeds', this)">User Needs</button>
+                    <button class="inner-tab" onclick="showInner2('botneeds', this)">Bot Needs</button>
                 </div>
 
-                <h3>Primary Users</h3>
-                <ul>
-                    <li>NYC residents reporting local issues</li>
-                    <li>Property owners managing maintenance concerns</li>
-                    <li>Visitors seeking city information</li>
-                    <li>Community advocates tracking neighborhood issues</li>
-                </ul>
+                <div id="settingscene" class="inner-section active">
+                    <h2 class="sec">Setting the Scene</h2>
 
-                <h3>Value Proposition</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>Benefit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>24/7 Availability</strong></td>
-                            <td>Report issues anytime, anywhere</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Reduced Wait Times</strong></td>
-                            <td>Instant engagement vs. phone queue</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Guided Reporting</strong></td>
-                            <td>Structured data collection ensures complete reports</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Multilingual Access</strong></td>
-                            <td>Support for 200+ languages</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Status Tracking</strong></td>
-                            <td>Real-time updates on existing requests</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Accessibility</strong></td>
-                            <td>Multiple channels for users with different needs</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-label">Scenario Template for Chatbot Design</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Copy
+                            </button>
+                        </div>
+                        <pre># Scenario Template for Chatbot Design
+## Scenario [Number]: [Brief Descriptive Title]
 
-            <!-- ENTRY POINTS SECTION -->
-            <section id="entrypoints" class="section">
-                <h2>3. Entry Points (User Journey)</h2>
 
-                <h3>Digital Channels</h3>
-                
-                <h4>A. NYC.gov Website</h4>
-                <ul>
-                    <li>Prominent chat icon on bottom right of all pages</li>
-                    <li>Dedicated 311 service page with chat-first interface</li>
-                    <li>Pop-up prompt for users on service-related pages</li>
-                </ul>
+## 1. Physical and Social Context
 
-                <h4>B. NYC311 Mobile App</h4>
-                <ul>
-                    <li>Home screen button: "Chat with 311"</li>
-                    <li>Context-aware prompts when browsing service categories</li>
-                    <li>Push notifications for existing request updates</li>
-                </ul>
+**Physical Location:**
+* [Where is the user physically located?]
+* [What is their immediate environment like?]
+* [Any environmental factors affecting their interaction?]
 
-                <h4>C. Social Media</h4>
-                <ul>
-                    <li>Click-to-chat buttons on NYC311 Facebook/Instagram pages</li>
-                    <li>Direct messaging integration on Twitter</li>
-                    <li>QR codes in social media posts</li>
-                </ul>
+**Social Setting:**
+* [Are they alone or with others?]
+* [What is their privacy level?]
+* [Any social dynamics affecting the conversation?]
 
-                <h4>D. SMS</h4>
-                <div class="card">
-                    <p><strong>Text "NYC" to 311311</strong></p>
-                    <p>Promoted on billboards, transit ads, city communications</p>
-                </div>
+**Available Tools/Devices:**
+* [What device(s) are they using?]
+* [Any technical constraints or capabilities?]
+* [Environmental conditions affecting device use?]
 
-                <h3>Physical/Printed Materials</h3>
 
-                <h4>QR Code Placements:</h4>
-                <ul>
-                    <li>Bus stop shelters and subway stations</li>
-                    <li>Physical 311 service center materials</li>
-                    <li>Community board notices</li>
-                    <li>Printed on city utility bills</li>
-                    <li>Signage in parks and public spaces</li>
-                </ul>
+## 2. Time Factors
 
-                <h4>Direct Referrals:</h4>
-                <ul>
-                    <li>311 call center transfers: "Would you like to continue via chat?"</li>
-                    <li>City agency website redirects</li>
-                    <li>Community organization partnerships</li>
-                </ul>
+**Time of Day:**
+* [When is this interaction occurring?]
+* [How does time of day affect their state/needs?]
 
-                <h4>Contextual Triggers:</h4>
-                <ul>
-                    <li>Location-based prompts (e.g., near a park: "Report park issues here")</li>
-                    <li>Event-based notifications (e.g., after snowstorms: "Report snow removal issues")</li>
-                </ul>
-            </section>
+**Temporal Context:**
+* [What recently happened that prompted this interaction?]
+* [Is this part of a longer journey or isolated incident?]
+* [Any relevant history or patterns?]
 
-            <!-- USER INTENTS SECTION -->
-            <section id="intents" class="section">
-                <h2>4. User Intent Examples</h2>
+**Time Pressure:**
+* [How urgent does this feel to the user?]
+* [Do they have time constraints?]
+* [What's their tolerance for a lengthy interaction?]
 
-                <h3>Category 1: Incident Reporting (Transactional)</h3>
-                
-                <h4>Sanitation & Streets:</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
+
+## 3. Emotional State
+
+**Primary Emotions:**
+* [What is the user feeling right now?]
+* [What intensity level?]
+* [Any conflicting emotions?]
+
+**Underlying Needs:**
+* [What emotional needs are driving this interaction?]
+* [What do they need to feel/experience?]
+* [What would make them feel better?]
+
+**Expectations:**
+
+What would constitute a helpful interaction:
+* ✅ [Expectation 1]
+* ✅ [Expectation 2]
+* ✅ [Expectation 3]
+
+What would be an unhelpful interaction:
+* ❌ [Anti-pattern 1]
+* ❌ [Anti-pattern 2]
+* ❌ [Anti-pattern 3]
+
+**Success Criteria for User:**
+* [What does "done" look like?]
+* [What would make them satisfied?]
+* [What would make them return/recommend?]
+
+
+## 4. Potential Variations of This Scenario
+
+**Variation A:** [Brief descriptor]
+* [Key differentiator]
+* [Unique need or behavior]
+* [What bot should adjust]
+
+**Variation B:** [Brief descriptor]
+* [Key differentiator]
+* [Unique need or behavior]
+* [What bot should adjust]
+
+**Variation C:** [Brief descriptor]
+* [Key differentiator]
+* [Unique need or behavior]
+* [What bot should adjust]
+
+
+## 5. Context Clues the Bot Should Recognize
+
+**Indicators of [State/Need 1]:**
+* [Observable signal 1]
+* [Observable signal 2]
+* [Observable signal 3]
+
+**Indicators of [State/Need 2]:**
+* [Observable signal 1]
+* [Observable signal 2]
+* [Observable signal 3]
+
+**Indicators of [State/Need 3]:**
+* [Observable signal 1]
+* [Observable signal 2]
+* [Observable signal 3]
+
+
+## 📝 Usage Notes
+
+When filling out this template:
+* Be specific and concrete—avoid generic descriptions
+* Use real user language in examples
+* Include sensory details that affect the interaction
+* Consider multiple user types within the same scenario
+* Validate assumptions with actual user research
+* Update based on observed interactions</pre>
                     </div>
-                    <pre>- "There's a pothole on my street"
-- "Missed trash pickup on my block"
-- "Report illegal dumping"
-- "Broken street light at corner of..."
-- "Need bulk item pickup"</pre>
                 </div>
 
-                <h4>Noise & Quality of Life:</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
+                <div id="userneeds" class="inner-section">
+                    <h2 class="sec">User Needs</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-label">User Needs Template for Chatbot Design</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Copy
+                            </button>
+                        </div>
+                        <pre># User Needs Template for Chatbot Design
+
+## 1. Information Needs
+
+What the user seeks to know or understand:
+* [Primary knowledge gap or question they need answered]
+* [Structured guidance or framework to navigate their situation]
+* [Communication strategies for stakeholders in their ecosystem]
+* [Access to resources, tools, or human connections]
+* [Practical, actionable answers to immediate concerns]
+
+**Example Queries:**
+* "[Core question about their situation]"
+* "[Question about capability/limitation during process]"
+* "[Question about consequences or outcomes]"
+
+
+## 2. Expectations
+
+What the user expects from the chatbot experience:
+* [Emotional tone and approach - e.g., empathetic, professional, friendly]
+* [Accuracy and credibility of information provided]
+* [Level of personalization based on their context]
+* [Availability and responsiveness requirements]
+* [Escalation path to human assistance when needed]
+
+
+## 3. Motivations
+
+What drives the user to engage with the chatbot:
+* [Desire for control, autonomy, or empowerment]
+* [Need for connection, support, or validation]
+* [Goal to prepare themselves or others]
+* [Search for clarity, certainty, or understanding]
+
+
+## 4. Demands and Preferences
+
+**Preferences (Nice-to-haves):**
+* [Communication style and tone - e.g., conversational, formal, warm]
+* [Information presentation format - e.g., simplified, step-by-step, detailed]
+* [Interaction style - e.g., ability to ask follow-ups, explore topics]
+* [Multimedia support - e.g., visuals, videos, documents]
+* [Access channels - e.g., text, voice, mobile, desktop]
+
+**Demands (Must-haves):**
+* [Security/privacy requirements]
+* [Personalization boundaries - avoiding generic responses]
+* [Speed and efficiency expectations]
+
+
+## 5. Anxieties and Concerns
+
+Emotional and practical barriers the user may experience:
+* [Feeling overwhelmed by complexity or volume of information]
+* [Fear or worry about outcomes or consequences]
+* [Concerns about impact on their ecosystem - relationships, work, life]
+* [Uncertainty about where to begin or what's trustworthy]
+* [Psychological safety concerns - judgment, appearing uninformed]</pre>
                     </div>
-                    <pre>- "Loud construction at night"
-- "Neighbor's dog won't stop barking"
-- "Report illegal fireworks"
-- "Loud party complaint"</pre>
                 </div>
 
-                <h4>Property & Housing:</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
+                <div id="botneeds" class="inner-section">
+                    <h2 class="sec">Bot Needs</h2>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-label">Bot Needs Template for Chatbot Design</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Copy
+                            </button>
+                        </div>
+                        <pre># Bot Needs Template for Chatbot Design (Simplified)
+
+## 1. Core Capabilities
+
+What the bot is designed to do:
+* [Primary Function Area 1]
+   * [Specific capability or action]
+   * [Specific capability or action]
+* Examples:
+   * ✅ DO: [Concrete example of good implementation]
+   * ❌ DON'T: [What to avoid]
+
+* [Primary Function Area 2]
+   * [Specific capability or action]
+   * [Specific capability or action]
+* Examples:
+   * ✅ DO: [Concrete example of good implementation]
+   * ❌ DON'T: [What to avoid]
+
+* [Primary Function Area 3]
+   * [Specific capability or action]
+* Examples:
+   * ✅ DO: [Concrete example of good implementation]
+   * ❌ DON'T: [What to avoid]
+
+
+## 2. Must Ask
+
+Information the bot needs to collect for personalization:
+* [Key data point 1]
+* [Key data point 2]
+* [Key data point 3]
+
+Examples:
+* ✅ DO: [How to ask with context/reason]
+* ❌ DON'T: [Form-style interrogation or asking without reason]
+
+
+## 3. Has Already
+
+Information available to the bot from existing systems:
+* [Pre-existing data source 1]
+* [Pre-existing data source 2]
+* [Pre-existing data source 3]
+
+Examples:
+* ✅ DO: [How to use existing data transparently]
+* ❌ DON'T: [Creepy or outdated data usage]
+
+
+## 4. Must Provide
+
+Non-negotiable outputs or resources:
+* [Core deliverable 1]
+* [Core deliverable 2]
+* [Core deliverable 3]
+
+Examples:
+* ✅ DO: [Actionable, multi-format delivery]
+* ❌ DON'T: [Info dump without next steps]
+
+
+## 5. User Behavior Patterns
+
+Expected user interaction styles:
+* [Behavior Type 1]: [Description]
+   * ✅ DO: [How bot should respond]
+   * ❌ DON'T: [What frustrates this user]
+
+* [Behavior Type 2]: [Description]
+   * ✅ DO: [How bot should respond]
+   * ❌ DON'T: [What frustrates this user]
+
+* [Behavior Type 3]: [Description]
+   * ✅ DO: [How bot should respond]
+   * ❌ DON'T: [What frustrates this user]
+
+
+## 6. Limitations
+
+What the bot cannot or must not do:
+* [Hard Boundary 1]
+   * ❌ DON'T: [Example of violation]
+   * ✅ DO INSTEAD: [Alternative safe response]
+
+* [Hard Boundary 2]
+   * ❌ DON'T: [Example of violation]
+   * ✅ DO INSTEAD: [Alternative safe response]
+
+* [Hard Boundary 3]
+   * ❌ DON'T: [Example of violation]
+   * ✅ DO INSTEAD: [Alternative safe response]
+
+
+## 7. Tone & Approach
+
+Personality and communication style:
+[Overall character/role in 1 sentence]
+
+Core tone: [Adjective], [Adjective], [Adjective]
+
+Examples:
+
+[Tone Quality 1]:
+* ✅ DO: "[Example phrase or approach]"
+* ❌ DON'T: "[Counter-example to avoid]"
+
+[Tone Quality 2]:
+* ✅ DO: "[Example phrase or approach]"
+* ❌ DON'T: "[Counter-example to avoid]"
+
+[Tone Quality 3]:
+* ✅ DO: "[Example phrase or approach]"
+* ❌ DON'T: "[Counter-example to avoid]"
+
+
+## 📋 Quick Reference Card
+
+| Section           | Key Question                        |
+|-------------------|-------------------------------------|
+| Core Capabilities | What can the bot actually do?       |
+| Must Ask          | What info does the bot need?        |
+| Has Already       | What does the bot already know?     |
+| Must Provide      | What must the bot always deliver?   |
+| User Behavior     | How will users actually interact?   |
+| Limitations       | What are the hard boundaries?       |
+| Tone & Approach   | How should the bot sound?           |
+
+
+## ✅ Quality Checklist
+
+Before finalizing, ensure:
+* Every ✅ DO example uses realistic user language
+* Every ❌ DON'T shows a real anti-pattern to avoid
+* Examples don't conflict across sections
+* Tone examples can be copy-pasted as starter prompts
+* Limitations show both boundary AND alternative
+* Behaviors reflect real users, not "ideal" users</pre>
                     </div>
-                    <pre>- "Report graffiti on building"
-- "Broken fire hydrant"
-- "Tree fallen in my yard"
-- "Abandoned vehicle on my street"
-- "Report dangerous building conditions"</pre>
                 </div>
+            </div>
 
-                <h3>Category 2: Information & Guidance (Informational)</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>- "When is alternate side parking suspended?"
-- "What day is my trash pickup?"
-- "Where's the nearest DMV?"
-- "How do I get a birth certificate?"
-- "What are the noise complaint rules?"
-- "Is my block zoned for street vending?"</pre>
-                </div>
-
-                <h3>Category 3: Request Status (Tracking)</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>- "Check status of my 311 complaint"
-- "Where's my service request?"
-- "Was my pothole report completed?"
-- "Update on my noise complaint"</pre>
-                </div>
-
-                <h3>Category 4: Emotional/Support (Empathetic)</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Example User Queries</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>- "I don't feel safe in my building"
-- "My landlord won't fix the heat in winter"
-- "I'm homeless and need help"
-- "I need food assistance urgently"</pre>
-                </div>
-            </section>
-
-            <!-- BOT RESPONSES SECTION -->
-            <section id="responses" class="section">
-                <h2>5. Bot Responses</h2>
-
-                <h3>Response Style Framework</h3>
-
-                <h4>A. Empathetic Tone</h4>
-                <p><em>Used when: User expresses distress, frustration, or urgent need</em></p>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Empathetic Response Example</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "There's no heat in my apartment and it's freezing"
-
-Bot: "I understand how uncomfortable and concerning that must be, 
-especially in this cold weather. Let me help you report this right away 
-and connect you with emergency resources. 
-
-This is a serious issue - buildings must maintain heat between October 
-and May. I can:
-1. File an emergency heat complaint with HPD
-2. Provide the tenant helpline number (212-HEAT)
-3. Share information about emergency shelters if needed
-
-Which would be most helpful right now?"</pre>
-                </div>
-
-                <h4>B. Informational Tone</h4>
-                <p><em>Used when: User seeks factual information or guidance</em></p>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Informational Response Example</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "When is my recycling picked up?"
-
-Bot: "I can help you find your collection schedule! 
-
-To look this up, I'll need your address or borough. Metal, glass, 
-plastic, and beverage cartons are collected on the same day as your 
-trash, just in separate bins.
-
-What's your address or which borough are you in?"</pre>
-                </div>
-
-                <h4>C. Actionable/Directive Tone</h4>
-                <p><em>Used when: Guiding users through processes or next steps</em></p>
-                
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Actionable Response Example</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "I want to report a pothole"
-
-Bot: "I'll help you report that pothole right now. To create an 
-effective service request, I need a few details:
-
-📍 **Location** - What's the exact address or nearest intersection?
-📏 **Size** - How large is it? (small/medium/large)
-📸 **Photo** - Can you upload a picture? (optional but helpful)
-
-Let's start with the location - where is this pothole?"</pre>
-                </div>
-
-                <h3>Response Principles</h3>
-                <div class="card">
-                    <ol>
-                        <li><strong>Clarity First:</strong> Use simple language, avoid jargon</li>
-                        <li><strong>Progressive Disclosure:</strong> Don't overwhelm with information</li>
-                        <li><strong>Visual Structure:</strong> Use emojis, line breaks, numbered lists</li>
-                        <li><strong>Confirmation:</strong> Always summarize what was understood/completed</li>
-                        <li><strong>Next Steps:</strong> Always provide clear path forward</li>
-                        <li><strong>Multilingual Sensitivity:</strong> Offer language options proactively</li>
-                    </ol>
-                </div>
-            </section>
-
-            <!-- HAPPY PATH SECTION -->
-            <section id="happypath" class="section">
-                <h2>6. Happy Path Flow</h2>
-                
-                <h3>Scenario: Resident Reports a Pothole</h3>
-
-                <div class="flow-diagram">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <div class="step-title">Initiation</div>
-                            <div class="code-block">
-                                <div class="code-header">
-                                    <span class="code-label">Step 1: User initiates report</span>
-                                    <button class="copy-btn" onclick="copyCode(this)">
-                                        <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Copy
-                                    </button>
-                                </div>
-                                <pre>User: "There's a huge pothole on my street"
-
-Bot: "I'll help you report that pothole to the Department of 
-Transportation. They typically respond to pothole complaints within 
-30 days.
-
-To file your report, I need the location. What's the address or 
-nearest cross streets?"</pre>
-                            </div>
+            <!-- SECTION B -->
+            <div id="pageB" class="page">
+                <div class="placeholder-page">
+                    <h2>Artifact 3 — Content Library</h2>
+                    <p>Content style resources for the NYC 311 Chat Assistant project.</p>
+                    <div style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px;">
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1xApoipUDEbZA7-5NDC00BRwinqYyUKZx/edit','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#f7971e,#ffd200);">✍️</div>
+                            <h3>Content Style Guide</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
+                            <span class="card-tag" style="background:#fff8e1;color:#e09000;">↗ Open in Google Docs</span>
+                        </div>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/14RVJ3SOEMhwD9h7Gn03yU14On9yiB2aHzTk6--TXKRQ/edit?usp=drive_web&ouid=115820712196502129220','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#43c6ac,#191654);">📚</div>
+                            <h3>Prompt Library</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
+                            <span class="card-tag" style="background:#f0fff4;color:#28a745;">↗ Open in Google Docs</span>
+                        </div>
+                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1ZGMkFZ-Ls8A1lpnzVIyjow1mVTI-EbFI','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#6a11cb,#2575fc);">🎙️</div>
+                            <h3>VUI Foundations</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
+                            <span class="card-tag" style="background:#f0f0ff;color:#6a11cb;">↗ Open in Google Drive</span>
+                        </div>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1ZBuufGxe0NXBbV40lkhQxEL3y_-s1qVweqr3f8Z-txw/edit?usp=drive_link','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#11998e,#38ef7d);">💬</div>
+                            <h3>Dialogue Defaults</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
+                            <span class="card-tag" style="background:#f0fff8;color:#11998e;">↗ Open in Google Docs</span>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <div class="step-title">Information Gathering</div>
-                            <div class="code-block">
-                                <div class="code-header">
-                                    <span class="code-label">Step 2: Collect location details</span>
-                                    <button class="copy-btn" onclick="copyCode(this)">
-                                        <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Copy
-                                    </button>
-                                </div>
-                                <pre>User: "Corner of 5th Ave and 23rd Street"
-
-Bot: "Got it - 5th Avenue and 23rd Street in Manhattan.
-
-How would you describe the size?
-1. Small (less than 2 feet across)
-2. Medium (2-4 feet across)  
-3. Large (more than 4 feet across)
-
-Just send me the number or description."</pre>
-                            </div>
+            <!-- ARTIFACT 4 -->
+            <div id="pageD" class="page">
+                <div class="placeholder-page">
+                    <h2>Artifact 4 — Research Files</h2>
+                    <p>Research documents supporting the NYC 311 Chat Assistant project.</p>
+                    <div style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px;">
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1sUIkWhJcTlou1YsOMgEulXf6WRRQZM6ekNtj786dIYY/edit?tab=t.b7pi9sgq6fom','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#1a8a5a,#43c6ac);">📋</div>
+                            <h3>Desk Research</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Background research and findings</p>
+                            <span class="card-tag" style="background:#f0fff8;color:#1a8a5a;">↗ Open in Google Docs</span>
                         </div>
-                    </div>
-
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <div class="step-title">Additional Details</div>
-                            <div class="code-block">
-                                <div class="code-header">
-                                    <span class="code-label">Step 3: Gather additional information</span>
-                                    <button class="copy-btn" onclick="copyCode(this)">
-                                        <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Copy
-                                    </button>
-                                </div>
-                                <pre>User: "3 - it's really big"
-
-Bot: "That does sound significant. A few more quick questions:
-
-📸 Do you have a photo you can share? (optional but helps prioritize)
-⚠️ Is it causing an immediate safety hazard - like water main break 
-or exposed utility lines?"</pre>
-                            </div>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1sUIkWhJcTlou1YsOMgEulXf6WRRQZM6ekNtj786dIYY/edit?tab=t.v5bn466e9a2v','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">🤖</div>
+                            <h3>Bot Persona</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Character and personality definition</p>
+                            <span class="card-tag" style="background:#f0f0ff;color:#667eea;">↗ Open in Google Docs</span>
                         </div>
-                    </div>
-
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <div class="step-title">Contact Information</div>
-                            <div class="code-block">
-                                <div class="code-header">
-                                    <span class="code-label">Step 4: Collect contact details</span>
-                                    <button class="copy-btn" onclick="copyCode(this)">
-                                        <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Copy
-                                    </button>
-                                </div>
-                                <pre>User: "No that's everything"
-
-Bot: "Perfect. To complete your report, I'll need:
-
-📧 Email or 📱 Phone number (to send you updates and your Service 
-Request number)
-
-Which would you prefer?"</pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="step">
-                        <div class="step-number">5</div>
-                        <div class="step-content">
-                            <div class="step-title">Confirmation & Submission</div>
-                            <div class="code-block">
-                                <div class="code-header">
-                                    <span class="code-label">Step 5: Submit and confirm</span>
-                                    <button class="copy-btn" onclick="copyCode(this)">
-                                        <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                        Copy
-                                    </button>
-                                </div>
-                                <pre>User: "john.doe@email.com"
-
-Bot: "✅ Your pothole report has been submitted!
-
-**Service Request #:** SR123456789
-**Location:** 5th Ave & 23rd St, Manhattan
-**Reported:** February 2, 2026 at 2:45 PM
-**Expected Response:** Within 30 days
-
-You'll receive email updates at john.doe@email.com when:
-• Your request is reviewed
-• Work is scheduled  
-• Repairs are completed
-
-You can check status anytime by sharing your SR number with me or 
-visiting nyc.gov/311central
-
-Is there anything else I can help you with today?"</pre>
-                            </div>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1sUIkWhJcTlou1YsOMgEulXf6WRRQZM6ekNtj786dIYY/edit?tab=t.f6aacxav7xi','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#f7971e,#ffd200);">💬</div>
+                            <h3>Sample Dialogue</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Example conversation flows and scripts</p>
+                            <span class="card-tag" style="background:#fff8e1;color:#e09000;">↗ Open in Google Docs</span>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- EDGE CASES SECTION -->
-            <section id="edgecases" class="section">
-                <h2>7. Edge Cases</h2>
+            <!-- SECTION C -->
+            <div id="pageC" class="page">
+                <div class="placeholder-page">
+                    <h2>Workshop Materials</h2>
+                    <p>Access all workshop resources below.</p>
+                    <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px; max-width: 520px;">
 
-                <h3>Edge Case 1: User in Immediate Danger/Emergency</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Emergency Response</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1cN4NxU5dLEVbTyQSf0y3PHhix3dY_2bA03a-nfXmMr4/edit?tab=t.kk92q8lf4ewt','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#667eea,#764ba2); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">📝</div>
+                            <div style="flex:1;">
+                                <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Exercise Files</h3>
+                                <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Docs</p>
+                            </div>
+                            <span style="color:#adb5bd; font-size:1em;">↗</span>
+                        </div>
+
+                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1MrhyL5i6boh9BqH4XJ832zr9-k95IKBf?usp=sharing','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#f7971e,#ffd200); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">📊</div>
+                            <div style="flex:1;">
+                                <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Presentation</h3>
+                                <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Drive</p>
+                            </div>
+                            <span style="color:#adb5bd; font-size:1em;">↗</span>
+                        </div>
+
+                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1NRYiFBs6sHQbyq7MvyUGJQwWddmADXeO?usp=drive_link','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#ee0979,#ff6a00); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">🎬</div>
+                            <div style="flex:1;">
+                                <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Videos</h3>
+                                <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Drive</p>
+                            </div>
+                            <span style="color:#adb5bd; font-size:1em;">↗</span>
+                        </div>
+
                     </div>
-                    <pre>User: "There's a fire in my building!"
 
-Bot: "🚨 This is an EMERGENCY. 
-
-CALL 911 IMMEDIATELY: 911
-
-I'm a non-emergency service and can't dispatch emergency responders. 
-Please call 911 right now if you haven't already.
-
-Are you in a safe location?"</pre>
-                </div>
-
-                <h3>Edge Case 2: Request Outside Bot Scope</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Out of Scope Redirect</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
+                    <!-- Apps to Download -->
+                    <div style="margin-top: 44px; max-width: 520px;">
+                        <h3 style="color:#1e3c72; font-size:1.3em; margin-bottom:8px;">Apps to Download</h3>
+                        <p style="color:#6c757d; font-size:0.95em; margin-bottom:16px;">Before the workshop, please make sure to create accounts for the following tools:</p>
+                        <ul>
+                            <li><a href="https://voiceflow.com" target="_blank" style="color:#667eea; text-decoration:none; font-weight:600;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Voiceflow</a></li>
+                            <li><a href="https://claude.ai" target="_blank" style="color:#667eea; text-decoration:none; font-weight:600;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Claude</a></li>
+                            <li><a href="https://figma.com" target="_blank" style="color:#667eea; text-decoration:none; font-weight:600;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Figma</a></li>
+                        </ul>
                     </div>
-                    <pre>User: "Can you pay my parking ticket for me?"
 
-Bot: "I can't directly process parking ticket payments, but I can help 
-you take care of it!
-
-To pay or dispute a parking ticket, you have a few options:
-
-💻 **Online:** nyc.gov/parkingticket
-📱 **By Phone:** 311 
-🏛️ **In Person:** NYC DOF Business Centers
-
-Do you need:
-• The link to pay online?
-• Information about disputing a ticket?
-• Location of nearest payment center?"</pre>
                 </div>
+            </div>
 
-                <h3>Edge Case 3: Ambiguous or Unclear Query</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Clarification Request</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "It's really loud"
+        </div><!-- /main -->
+    </div><!-- /body-layout -->
 
-Bot: "I can help you with noise complaints. To file the right type of 
-report, can you tell me more about the noise?
+    <footer>
+        <p><strong>NYC 311 Chat Assistant Project Wiki</strong> &nbsp;·&nbsp; <span style="font-family: monospace; background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">v2.8.1</span></p>
+    </footer>
 
-Is it:
-1. Construction noise
-2. Neighbor/residential noise (music, parties, etc.)
-3. Commercial establishment (bar, restaurant)
-4. Car alarm or vehicle noise
-5. Something else
+</div><!-- /shell -->
 
-Just send the number or describe it in your own words."</pre>
-                </div>
+<script>
+    // Map inner section IDs to their page
+    const innerSections = ['overview','usecase','entrypoints','intents','responses','happypath','edgecases','questions','resources'];
 
-                <h3>Edge Case 4: Angry or Frustrated User</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">De-escalation Response</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "This is ridiculous! I've reported this pothole 5 times and 
-nobody does anything!!!"
+    function showPage(pageId, triggerEl) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if (triggerEl) triggerEl.classList.add('active');
+        document.querySelector('.main').scrollTop = 0;
+    }
 
-Bot: "I can hear your frustration, and you have every right to be 
-concerned - especially if this has been ongoing. Let me look into this 
-for you.
+    function navTo(pageId) {
+        // find the sidebar button for this page and activate it
+        const btns = document.querySelectorAll('.nav-item');
+        let found = null;
+        btns.forEach(b => {
+            if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + pageId + "'")) found = b;
+        });
+        showPage(pageId, found);
+    }
 
-Do you have a Service Request number from any of your previous reports? 
-Or can you share the location so I can check the status?
+    function showInner2(sectionId, triggerEl) {
+        const a2 = document.getElementById('pageA');
+        a2.querySelectorAll('.inner-section').forEach(s => s.classList.remove('active'));
+        a2.querySelectorAll('.inner-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        triggerEl.classList.add('active');
+        document.querySelector('.main').scrollTop = 0;
+    }
 
-I want to make sure we escalate this appropriately and get you answers."</pre>
-                </div>
+    function showInner(sectionId, triggerEl) {
+        innerSections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+        });
+        document.querySelectorAll('.inner-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        triggerEl.classList.add('active');
+        document.querySelector('.main').scrollTop = 0;
+    }
 
-                <h3>Edge Case 5: Language Barrier</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Multilingual Support</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>User: "¿Puedo hablar en español?"
-
-Bot: "¡Por supuesto! Puedo ayudarte en español.
-
-Soy el Asistente 311 de NYC. Puedo ayudarte a:
-• Reportar problemas
-• Obtener información sobre servicios
-• Verificar el estado de solicitudes existentes
-
-¿En qué puedo ayudarte hoy?"</pre>
-                </div>
-
-                <h3>Edge Case 6: System/Technical Error</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Error Recovery</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>Bot: "I apologize - I'm experiencing a technical issue and couldn't 
-submit your report. 
-
-Your information is saved. You can:
-
-📞 Call 311 to complete your report (they can access what we discussed)
-💻 Visit nyc.gov/311 to submit online
-🔄 Try again in a few minutes (I'll remember your details)
-
-Would you like me to text you a reminder to follow up, or would you 
-prefer to call 311 now?"</pre>
-                </div>
-            </section>
-
-            <!-- FAQ SECTION -->
-            <section id="questions" class="section">
-                <h2>8. Anticipated Questions</h2>
-
-                <h3>Category 1: Getting Started</h3>
-                <div class="card">
-                    <ul>
-                        <li>"What can you help me with?"</li>
-                        <li>"How does this work?"</li>
-                        <li>"Do I need an account?"</li>
-                        <li>"Is this secure?"</li>
-                        <li>"Can I remain anonymous?"</li>
-                        <li>"What languages do you speak?"</li>
-                    </ul>
-                </div>
-
-                <h3>Category 2: Report Filing</h3>
-                <h4>Before Filing:</h4>
-                <div class="card">
-                    <ul>
-                        <li>"What counts as a 311 issue?"</li>
-                        <li>"Is this an emergency?"</li>
-                        <li>"Do I need to provide my name?"</li>
-                        <li>"What information do you need from me?"</li>
-                        <li>"Can I upload photos?"</li>
-                    </ul>
-                </div>
-
-                <h4>After Filing:</h4>
-                <div class="card">
-                    <ul>
-                        <li>"What's my service request number?"</li>
-                        <li>"How do I check the status?"</li>
-                        <li>"Can I cancel my request?"</li>
-                        <li>"Why is it taking so long?"</li>
-                        <li>"Can I submit another complaint about the same issue?"</li>
-                    </ul>
-                </div>
-
-                <h3>Category 3: Service-Specific Questions</h3>
-                
-                <h4>Sanitation:</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Common Sanitation Questions</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>- "When is my trash day?"
-- "What can I recycle?"
-- "How do I dispose of [large item]?"
-- "What if my trash wasn't picked up?"
-- "How do I get a new trash bin?"</pre>
-                </div>
-
-                <h4>Housing:</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Common Housing Questions</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>- "What are my rights as a tenant?"
-- "How do I report housing code violations?"
-- "My landlord won't make repairs - what can I do?"
-- "How do I find affordable housing?"</pre>
-                </div>
-
-                <h3>Category 4: Escalation & Complaints</h3>
-                <div class="card">
-                    <ul>
-                        <li>"Nothing was done about my complaint"</li>
-                        <li>"I want to speak to a supervisor"</li>
-                        <li>"How do I file a complaint about a city employee?"</li>
-                        <li>"This is urgent - who can I talk to?"</li>
-                        <li>"Can I speak to a real person?"</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- RESOURCES SECTION -->
-            <section id="resources" class="section">
-                <h2>9. Helpful Information the Bot Provides</h2>
-
-                <h3>A. Process Guidance</h3>
-                
-                <h4>Response Time Expectations</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Typical Response Times</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>**Typical Response Times:**
-
-⚡ **Immediate/Same Day:**
-• Downed power lines (utility company)
-• Hazardous material spills
-• Water main breaks
-
-🏃 **1-3 Days:**
-• Dead animals in public spaces
-• Traffic signal malfunctions
-• Overflowing catch basins
-
-📅 **5-10 Days:**
-• Streetlight outages
-• Tree limb removal
-• Graffiti removal (public property)
-
-📆 **30 Days:**
-• Potholes
-• Sidewalk repairs
-• Illegal dumping investigations
-• Noise complaints</pre>
-                </div>
-
-                <h3>B. Rights & Regulations</h3>
-
-                <h4>Tenant Rights</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">NYC Tenant Rights</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>"As an NYC tenant, you have important rights:
-
-🏠 **Heat & Hot Water:**
-• Heat required Oct 1 - May 31
-• Minimum 68°F (6am-10pm) when outside temp below 55°F
-• Minimum 62°F (night) when outside temp below 40°F
-• Hot water at 120°F year-round
-
-📞 No heat? Call 311 for emergency HPD complaint
-
-🚫 **Illegal Evictions:**
-• Landlord cannot lock you out
-• Cannot shut off utilities
-• Cannot remove belongings
-• Must go through court process"</pre>
-                </div>
-
-                <h4>Noise Regulations</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">NYC Noise Code</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>"NYC Noise Code Quick Guide:
-
-🔇 **Residential Areas:**
-• Construction: Mon-Fri 7am-6pm only
-• No construction weekends/holidays (except emergency)
-• Music/TV: Cannot be heard from outside your apartment
-• Dogs: Cannot bark for 10+ minutes continuously
-
-🏗️ **Construction Exceptions:**
-• After-hours permits available for some work
-• Emergency repairs allowed 24/7
-
-📱 **To Report:**
-• Call 311 for general noise
-• Call 911 for noise + threat/danger"</pre>
-                </div>
-
-                <h3>C. Resource Directories</h3>
-
-                <h4>Emergency & Crisis Resources</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Emergency Contact Information</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>"🆘 **Emergency Services:**
-
-**Immediate Danger:**
-• Police/Fire/EMS: 911
-
-**Crisis Support:**
-• Suicide Prevention: 988 or 1-888-NYC-WELL
-• Domestic Violence: 1-800-621-HOPE (4673)
-• Child Abuse: 1-800-342-3720
-• Elder Abuse: 1-844-697-3505
-
-**Housing Emergencies:**
-• No Heat/Water: 311 (emergency HPD)
-• Homelessness: 311 (connects to DHS)
-• Emergency Shelter: 1-877-399-4357
-
-**Mental Health:**
-• NYC Well (24/7): 1-888-692-9355
-• Text "WELL" to 65173"</pre>
-                </div>
-
-                <h3>D. Escalation Paths</h3>
-
-                <h4>When Your Issue Isn't Resolved</h4>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span class="code-label">Escalation Process</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                    <pre>"If your 311 request wasn't handled properly:
-
-**Step 1: Check Status**
-• Use your SR# to check: nyc.gov/311central
-• Verify it was actually closed vs. still pending
-
-**Step 2: File Follow-Up**
-• Report it again, note it's a follow-up
-• Reference original SR#
-• Mark as "not resolved"
-
-**Step 3: Escalate**
-• Contact 311 Customer Service: 212-NEW-YORK (639-9675)
-• Reach out to your City Council Member: council.nyc.gov
-• Contact local Community Board
-
-**Step 4: Formal Complaints**
-• DOI (Department of Investigation) for city employee misconduct
-• Public Advocate's office
-• Comptroller's office"</pre>
-                </div>
-            </section>
-        </div>
-
-        <footer>
-            <p><strong>NYC 311 Chat Assistant Project Plan</strong></p>
-            <p>Implementation guide for AI-powered citizen service platform</p>
-        </footer>
-    </div>
-
-    <script>
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-            
-            // Scroll to top of content
-            document.querySelector('.content').scrollTop = 0;
-        }
-
-        function copyCode(button) {
-            const codeBlock = button.closest('.code-block');
-            const code = codeBlock.querySelector('pre').textContent;
-            
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = button.innerHTML;
-                button.innerHTML = `
-                    <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Copied!
-                `;
-                button.classList.add('copied');
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                alert('Failed to copy to clipboard');
-            });
-        }
-    </script>
+    function copyCode(button) {
+        const pre = button.closest('.code-block').querySelector('pre');
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+            const orig = button.innerHTML;
+            button.innerHTML = `<svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Copied!`;
+            button.classList.add('copied');
+            setTimeout(() => { button.innerHTML = orig; button.classList.remove('copied'); }, 2000);
+        });
+    }
+</script>
 </body>
 </html>
