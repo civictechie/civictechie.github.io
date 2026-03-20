@@ -294,8 +294,8 @@
             <div id="artifact1" class="page" style="padding:0;">
                 <div class="inner-tabs">
                     <a href="#pb-purpose" class="inner-tab active" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Purpose</a>
-                    <a href="#pb-usecase" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Use Case</a>
-                    <a href="#pb-entry" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Entry Points</a>
+                    <a href="#pb-usecase" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Project Details</a>
+                    <a href="#pb-entry" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Tone &amp; Voice</a>
                     <a href="#pb-intents" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">User Intents</a>
                     <a href="#pb-responses" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Bot Responses</a>
                     <a href="#pb-happypath" class="inner-tab" onclick="document.querySelectorAll('#artifact1 .inner-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Happy Path</a>
@@ -328,21 +328,61 @@ Primary Users
                         </section>
 
                         <section id="pb-usecase" style="margin-top:52px;">
-                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">2. Use Case</h2>
-                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Deployment Channels</h3>
-                            <p><strong>NYC 311 Mobile App</strong> — Primary integration within existing app. <strong>NYC.gov/311 Website</strong> — Embedded chat widget on the 311 portal. <strong>SMS/Text</strong> — Text-based access via existing 311 SMS number. <strong>Smart City Kiosks</strong> — Touch-enabled interface at LinkNYC kiosks.</p>
-                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Context &amp; Value</h3>
-                            <p>The chatbot provides 24/7 access to 311 services, reducing wait times for phone support and making it easier for residents to report issues in multiple languages. It guides users through the reporting process with contextual questions, validates information in real-time, and provides immediate confirmation and tracking numbers.</p>
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">2. Project Details</h2>
+
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">The Problem &amp; Opportunity</h3>
+                            <p style="font-weight:600; color:#1e3c72; margin-bottom:8px;">Why 311 Needs AI</p>
+                            <ul>
+                                <li>Call volume overload created long wait times for millions of residents annually</li>
+                                <li>Limited overnight staffing reduces accessibility for non-traditional work schedules</li>
+                                <li>Language barriers persist despite 200+ languages spoken across NYC</li>
+                                <li>High operational costs strain the city budget while demand continues to grow</li>
+                            </ul>
+
+                            <h3 style="margin:28px 0 10px; color:#1e3c72;">Why the Previous Chatbot Failed</h3>
+                            <p style="font-weight:600; color:#b71c1c; margin-bottom:8px;">Fatal Flaw: Illegal Advice</p>
+                            <p>The MyCity chatbot gave advice that violated NYC law:</p>
+                            <ul>
+                                <li>Told employers they could take workers' tips (illegal wage theft)</li>
+                                <li>Said businesses could operate cashless (banned by 2020 NYC law)</li>
+                                <li>Could recite laws correctly but consistently misinterpreted their meaning</li>
+                            </ul>
+                            <p style="font-weight:600; color:#1e3c72; margin:16px 0 8px;">Root Cause</p>
+                            <ul>
+                                <li>No verification system to check responses against authoritative legal sources</li>
+                                <li>Inadequate testing — no adversarial probing or legal expert review before launch</li>
+                                <li>No governance framework — unclear who was accountable for harmful advice</li>
+                                <li>Limited scope with poor integration into city systems</li>
+                                <li>No continuous monitoring to catch errors after deployment</li>
+                            </ul>
+
+                            <h3 style="margin:28px 0 10px; color:#1e3c72;">Conclusions</h3>
                         </section>
 
                         <section id="pb-entry" style="margin-top:52px;">
-                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">3. Entry Points</h2>
-                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Digital Channels</h3>
-                            <p>Direct access through NYC 311 app home screen ("Chat with 311" button), website chat bubble on nyc.gov/311, SMS keyword trigger (text "HELP" to 311-NYC), and voice assistant integration ("Alexa, open NYC 311").</p>
-                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Referrals &amp; Links</h3>
-                            <p>Social media campaigns with direct chat links, email notifications with "Check Status" chat links, and community board websites and local blogs.</p>
-                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Physical Materials</h3>
-                            <p>QR codes on street furniture and public spaces, QR codes on 311 mailers and flyers, signage at city service centers, and printed on utility bills and city communications.</p>
+                            <h2 class="sec" style="font-size:1.5em; border-bottom:2px solid #e9ecef; padding-bottom:10px; margin-bottom:20px;">3. Tone &amp; Voice</h2>
+
+                            <h3 style="margin:20px 0 10px; color:#1e3c72;">Tone &amp; Voice</h3>
+                            <ul>
+                                <li><strong>Clear:</strong> Straightforward language, no jargon, no filler phrases</li>
+                                <li><strong>Direct:</strong> Gets to the point without small talk or preamble</li>
+                                <li><strong>Neutral:</strong> Does not express enthusiasm, warmth, or emotional language</li>
+                                <li><strong>Consistent:</strong> Identical tone for every user, every issue, every time</li>
+                                <li><strong>Respectful:</strong> Treats all residents with equal courtesy regardless of how they write</li>
+                            </ul>
+
+                            <h3 style="margin:28px 0 10px; color:#1e3c72;">What It Is Not</h3>
+                            <p>Humanized language that simulates feeling — phrases like "I'm so sorry to hear that" or "Great question!" — is deliberately excluded. Simulated empathy can create false trust and lead users to accept incorrect information. Empathy is expressed through action: routing the right resources quickly, not through performative language.</p>
+                            <p>The bot is also not opinionated, over-reassuring, humorous, or deferential. It communicates what is known, not what is hoped.</p>
+
+                            <h3 style="margin:28px 0 10px; color:#1e3c72;">Responsible AI Alignment</h3>
+                            <ul>
+                                <li><strong>Transparency:</strong> Discloses AI identity upfront; cites sources for every factual claim; flags uncertainty rather than guessing</li>
+                                <li><strong>Fairness:</strong> Applies the same tone and quality of response to all users; bias is monitored through quarterly interactions audits</li>
+                                <li><strong>Accountability:</strong> All responses are logged and subject to human review; a human agent is always accessible</li>
+                                <li><strong>Privacy:</strong> Collects only the minimum data needed; users are informed their session is logged for quality assurance</li>
+                                <li><strong>Safety:</strong> Hard-coded rules override all other logic — emergencies route immediately to 911 with no exception</li>
+                            </ul>
                         </section>
 
                         <section id="pb-intents" style="margin-top:52px;">
@@ -907,21 +947,15 @@ Before finalizing, ensure:
                             <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
                             <span class="card-tag" style="background:#fff8e1;color:#e09000;">↗ Open in Google Docs</span>
                         </div>
-                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/14RVJ3SOEMhwD9h7Gn03yU14On9yiB2aHzTk6--TXKRQ/edit?usp=drive_web&ouid=115820712196502129220','_blank')">
-                            <div class="card-icon" style="background:linear-gradient(135deg,#43c6ac,#191654);">📚</div>
-                            <h3>Prompt Library</h3>
-                            <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
-                            <span class="card-tag" style="background:#f0fff4;color:#28a745;">↗ Open in Google Docs</span>
-                        </div>
-                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1ZGMkFZ-Ls8A1lpnzVIyjow1mVTI-EbFI','_blank')">
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1xc3tM5BG5G-O0zDMMd7d0xwZs51T148yzpuCr-DzJLI/edit?tab=t.b2hdwgvraigx','_blank')">
                             <div class="card-icon" style="background:linear-gradient(135deg,#6a11cb,#2575fc);">🎙️</div>
                             <h3>VUI Foundations</h3>
                             <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
-                            <span class="card-tag" style="background:#f0f0ff;color:#6a11cb;">↗ Open in Google Drive</span>
+                            <span class="card-tag" style="background:#f0f0ff;color:#6a11cb;">↗ Open in Google Docs</span>
                         </div>
-                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1ZBuufGxe0NXBbV40lkhQxEL3y_-s1qVweqr3f8Z-txw/edit?usp=drive_link','_blank')">
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1CB0rmsP8_KbW_xn0MQFzgKnN-g0zJHJ0/edit?rtpof=true','_blank')">
                             <div class="card-icon" style="background:linear-gradient(135deg,#11998e,#38ef7d);">💬</div>
-                            <h3>Dialogue Defaults</h3>
+                            <h3>Dialogue Presets</h3>
                             <p style="color:#6c757d; font-size:0.88em;">Version 1.0.0 — Feb 2026</p>
                             <span class="card-tag" style="background:#f0fff8;color:#11998e;">↗ Open in Google Docs</span>
                         </div>
@@ -941,7 +975,7 @@ Before finalizing, ensure:
                             <p style="color:#6c757d; font-size:0.88em;">Background research and findings</p>
                             <span class="card-tag" style="background:#f0fff8;color:#1a8a5a;">↗ Open in Google Docs</span>
                         </div>
-                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1sUIkWhJcTlou1YsOMgEulXf6WRRQZM6ekNtj786dIYY/edit?tab=t.v5bn466e9a2v','_blank')">
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1Ws5FUxBd_U7CAEmCCLpgesM6MZYOeWKnQTDslB8fSvg/edit?tab=t.ewl92rrlvqo0','_blank')">
                             <div class="card-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">🤖</div>
                             <h3>Bot Persona</h3>
                             <p style="color:#6c757d; font-size:0.88em;">Character and personality definition</p>
@@ -952,6 +986,12 @@ Before finalizing, ensure:
                             <h3>Sample Dialogue</h3>
                             <p style="color:#6c757d; font-size:0.88em;">Example conversation flows and scripts</p>
                             <span class="card-tag" style="background:#fff8e1;color:#e09000;">↗ Open in Google Docs</span>
+                        </div>
+                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/15qW9F3bwUZaOoyhmhcbqBkVyUqxuWK4_t4w8FxN9jyM/edit?tab=t.ireyenpzphqo#heading=h.haw3ai9dv0do','_blank')">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#2575fc,#6a11cb);">🎨</div>
+                            <h3>Design Canvas Prompts</h3>
+                            <p style="color:#6c757d; font-size:0.88em;">Prompts for the Design Canvas workshop activity</p>
+                            <span class="card-tag" style="background:#f0f0ff;color:#2575fc;">↗ Open in Google Docs</span>
                         </div>
                     </div>
                 </div>
@@ -964,11 +1004,11 @@ Before finalizing, ensure:
                     <p>Access all workshop resources below.</p>
                     <div style="margin-top: 28px; display: flex; flex-direction: column; gap: 14px; max-width: 520px;">
 
-                        <div class="artifact-card" onclick="window.open('https://docs.google.com/document/d/1cN4NxU5dLEVbTyQSf0y3PHhix3dY_2bA03a-nfXmMr4/edit?tab=t.kk92q8lf4ewt','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
+                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1HBTwGIwHyY4MGJIv2MOxwnFKwJEBuQ2F','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
                             <div class="card-icon" style="background:linear-gradient(135deg,#667eea,#764ba2); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">📝</div>
                             <div style="flex:1;">
                                 <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Exercise Files</h3>
-                                <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Docs</p>
+                                <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Drive</p>
                             </div>
                             <span style="color:#adb5bd; font-size:1em;">↗</span>
                         </div>
@@ -982,10 +1022,10 @@ Before finalizing, ensure:
                             <span style="color:#adb5bd; font-size:1em;">↗</span>
                         </div>
 
-                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1NRYiFBs6sHQbyq7MvyUGJQwWddmADXeO?usp=drive_link','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
-                            <div class="card-icon" style="background:linear-gradient(135deg,#ee0979,#ff6a00); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">🎬</div>
+                        <div class="artifact-card" onclick="window.open('https://drive.google.com/drive/folders/1BE77_iZhWtKVYztJqezaGjtS0rmZ-uV7','_blank')" style="display:flex; align-items:center; gap:16px; padding:18px 20px;">
+                            <div class="card-icon" style="background:linear-gradient(135deg,#ee0979,#ff6a00); width:42px; height:42px; border-radius:10px; flex-shrink:0; font-size:1.2em;">🤖</div>
                             <div style="flex:1;">
-                                <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Videos</h3>
+                                <h3 style="font-size:0.97em; margin:0 0 3px; color:#1e3c72;">Voiceflow Assets</h3>
                                 <p style="font-size:0.82em; color:#6c757d; margin:0;">Google Drive</p>
                             </div>
                             <span style="color:#adb5bd; font-size:1em;">↗</span>
@@ -1011,7 +1051,7 @@ Before finalizing, ensure:
     </div><!-- /body-layout -->
 
     <footer>
-        <p><strong>NYC 311 Chat Assistant Project Wiki</strong> &nbsp;·&nbsp; <span style="font-family: monospace; background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">v2.8.1</span></p>
+        <p><strong>NYC 311 Chat Assistant Project Wiki</strong> &nbsp;·&nbsp; <span style="font-family: monospace; background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">v2.11.0</span></p>
     </footer>
 
 </div><!-- /shell -->
