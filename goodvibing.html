@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good Vibing — In search of meaningful alternatives to #civictech building in the Age of AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --mid: #555;
+    --light: #999;
+    --rule: #e0e0e0;
+    --bg: #ffffff;
+    --accent: #0a0a0a;
+    --tag-bg: #f3f3f3;
+    --col: 680px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--black);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── LAYOUT SHELL ── */
+  .shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--rule);
+    padding: 40px 0 80px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: #fafafa;
+  }
+
+  .sidebar-brand {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-brand span {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .nav-item {
+    display: block;
+    padding: 5px 20px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--mid);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  .nav-item:hover {
+    color: var(--black);
+    background: #f0f0f0;
+  }
+
+  .nav-item.active {
+    color: var(--black);
+    font-weight: 500;
+    border-left-color: var(--black);
+    background: #ebebeb;
+  }
+
+  .nav-section-label {
+    padding: 16px 20px 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--light);
+  }
+
+  /* submenu */
+  .nav-parent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-parent .chevron {
+    font-size: 9px;
+    color: var(--light);
+    margin-right: 20px;
+    transition: transform 0.2s;
+  }
+
+  .nav-parent.open .chevron { transform: rotate(90deg); }
+
+  .nav-sub {
+    display: none;
+    background: #f5f5f5;
+    border-left: 1px solid var(--rule);
+    margin-left: 20px;
+  }
+
+  .nav-sub.open { display: block; }
+
+  .nav-sub .nav-item {
+    font-size: 12px;
+    padding: 4px 14px;
+    color: var(--mid);
+    border-left: none;
+  }
+
+  .nav-sub .nav-item.active {
+    color: var(--black);
+    font-weight: 500;
+    background: #ebebeb;
+  }
+
+  a {
+    color: var(--black);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s;
+  }
+
+  a:hover {
+    text-decoration-color: var(--black);
+  }
+
+  /* ── PAGE SHELL ── */
+  .page-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page {
+    max-width: var(--col);
+    margin: 0 auto;
+    padding: 72px 40px 120px;
+  }
+
+  /* page visibility */
+  .page-view { display: none; }
+  .page-view.active { display: block; }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1.5px solid var(--black);
+  }
+
+  .masthead-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 14px;
+  }
+
+  .masthead h1 {
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .masthead-sub {
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--mid);
+    margin-bottom: 20px;
+  }
+
+  .meta-strip {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .meta-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--mid);
+    background: var(--tag-bg);
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+
+  /* ── SECTION STRUCTURE ── */
+  section {
+    margin-bottom: 52px;
+  }
+
+  h2 {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--light);
+    margin-bottom: 18px;
+    padding-top: 36px;
+    border-top: 1px solid var(--rule);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    margin-top: 24px;
+    color: var(--black);
+  }
+
+  p {
+    color: #222;
+    margin-bottom: 14px;
+    font-weight: 300;
+  }
+
+  /* ── CALLOUT BLOCK ── */
+  .callout {
+    border-left: 2.5px solid var(--black);
+    padding: 14px 18px;
+    margin: 20px 0;
+    background: #fafafa;
+  }
+
+  .callout-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 6px;
+  }
+
+  .callout p {
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--black);
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+
+  th {
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    font-weight: 500;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: #222;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td:first-child {
+    font-weight: 500;
+    color: var(--black);
+    white-space: nowrap;
+    min-width: 110px;
+  }
+
+  /* ── THREE-COL TABLE ── */
+  .focus-table th,
+  .focus-table td {
+    text-align: center;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  /* ── BULLET LIST ── */
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 16px;
+  }
+
+  ul li {
+    padding: 5px 0 5px 20px;
+    position: relative;
+    color: #222;
+    font-weight: 300;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+
+  ul li:first-child { border-top: 1px solid var(--rule); }
+
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--light);
+    top: 5px;
+  }
+
+  /* ── PHASE ROWS ── */
+  .phase-block {
+    border: 1px solid var(--rule);
+    margin-bottom: 12px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .phase-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+  }
+
+  .phase-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .phase-days {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--light);
+    margin-left: auto;
+  }
+
+  .phase-body {
+    padding: 12px 16px;
+  }
+
+  .phase-body ul { margin: 0; }
+  .phase-body ul li { font-size: 13.5px; }
+
+  /* ── RUBRIC / SCORING ── */
+  .q-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .q-row:first-child { border-top: 1px solid var(--rule); }
+
+  .q-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--light);
+    min-width: 28px;
+    margin-top: 2px;
+  }
+
+  .q-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black);
+  }
+
+  /* ── SCORECARD ── */
+  .scorecard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .score-item {
+    border: 1px solid var(--rule);
+    padding: 16px;
+    border-radius: 2px;
+  }
+
+  .score-item-title {
+    font-weight: 600;
+    font-size: 13.5px;
+    margin-bottom: 6px;
+  }
+
+  .score-item-desc {
+    font-size: 12.5px;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* ── LEDGER ── */
+  .ledger {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 16px 0;
+  }
+
+  .ledger-col {
+    background: var(--bg);
+    padding: 16px;
+  }
+
+  .ledger-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 10px;
+  }
+
+  .ledger-col ul { margin: 0; }
+
+  /* ── PRINCIPLES ── */
+  .principle {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .principle:first-of-type { border-top: 1px solid var(--rule); }
+
+  .principle-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .principle-body {
+    font-size: 13.5px;
+    font-weight: 300;
+    color: #333;
+    margin: 0;
+  }
+
+  /* ── TRACKING TAGS ── */
+  .track-strip {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .track-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    color: var(--mid);
+  }
+
+  .track-tag span { color: var(--light); margin-right: 4px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1.5px solid var(--black);
+  }
+
+  .footer-quote {
+    font-style: italic;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--mid);
+    margin-bottom: 10px;
+    line-height: 1.65;
+  }
+
+  .footer-sign {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 20px 80px; }
+    .masthead h1 { font-size: 28px; }
+    .scorecard, .ledger { grid-template-columns: 1fr; }
+    td:first-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <span>Good Vibing</span>
+    Project Plan
+  </div>
+
+  <div class="nav-section-label">Project Details</div>
+  <a class="nav-item active" onclick="showPage('implementation')">Project Plan</a>
+
+  <div class="nav-section-label">Framework</div>
+  <a class="nav-item nav-parent" onclick="toggleSub(this)" id="framework-parent">
+    Framework
+    <span class="chevron">▶</span>
+  </a>
+  <div class="nav-sub" id="framework-sub">
+    <a class="nav-item" onclick="showPage('definition-of-good')">Definition of Good</a>
+    <a class="nav-item" onclick="showPage('guiding-principles')">Guiding Principles</a>
+    <a class="nav-item" onclick="showPage('evaluation-scoring')">Evaluation and Scoring</a>
+    <a class="nav-item" onclick="showPage('the-rubric')">Write the Narrative</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT AREA -->
+<div class="page-wrap">
+
+<!-- PAGE: IMPLEMENTATION PLAN -->
+<div class="page-view active" id="page-implementation">
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="masthead-eyebrow">Project Plan</div>
+    <h1>GOOD VIBING: In search of meaningful alternatives to #civictech building in the Age of AI</h1>
+    <div class="masthead-sub">Is vibecoding justifiably good for the Civic Tech community?</div>
+    <div class="meta-strip">
+      <span class="meta-tag">Version 1.5.0</span>
+      <span class="meta-tag">30-Day Experiment</span>
+      <span class="meta-tag">Civic Tech Community</span>
+    </div>
+  </div>
+
+  <!-- PROJECT OVERVIEW -->
+  <section>
+    <h2>Project Overview</h2>
+    <p>Good Vibing is a 30-day civic tech experiment that critically examines whether vibecoding — using large language model tools to build software with minimal traditional coding — can be a force for good in the civic technology space.</p>
+    <p>The experiment does not begin from a position of optimism. Our design manifesto is clear: designing with LLM tooling could be inherently unethical. We embark on this study to search for good alternatives, and to document honestly what we find.</p>
+    <div class="callout">
+      <div class="callout-label">Core Question</div>
+      <p>Can civic technologists participate in and leverage vibecoding tools for good — or do all paths lead to the harmful scenarios we have already predicted?</p>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section>
+    <h2>The Problem We Are Investigating</h2>
+    <p>Vibecoding sits at the intersection of several urgent tensions in technology today:</p>
+    <ul>
+      <li>Data centers are being built out at scale to support a trillion-dollar LLM industry, with enormous environmental costs.</li>
+      <li>Ethical AI policy and legislation are trailing far behind the speed of deployment.</li>
+      <li>The technology is already being misused — <a href="https://www.cnet.com/tech/services-and-software/anthropic-warns-of-new-vibe-hacking-attacks-that-use-claude-ai/" target="_blank" rel="noopener">malvertising via vibecoded sites</a>, <a href="https://www.theverge.com/ai-artificial-intelligence/890921/grammarly-ai-expert-reviews" target="_blank" rel="noopener">unauthorized use of writers' and designers' work</a>, and <a href="https://uxdesign.cc/google-says-vibe-design-is-here-but-it-didnt-pass-my-vibe-check-d3caae4922bf" target="_blank" rel="noopener">accelerating narratives about the diminishing value of human creative labor</a>.</li>
+      <li>Designers and community builders have historically been locked out of building tools without technical collaborators. Vibecoding changes that equation — but at what cost?</li>
+    </ul>
+    <div class="callout">
+      <div class="callout-label">Our Stance</div>
+      <p>We believe tech solutioning often yields bad results. Good designers focus on the problem first and ask whether a tech solution is even needed. Maybe analog is better.</p>
+    </div>
+  </section>
+
+  <!-- EXPERIMENT FOCUS -->
+  <section>
+    <h2>Experiment Focus Areas</h2>
+    <p>Participants will concentrate their 30 days across three civic domains:</p>
+    <table class="focus-table">
+      <thead>
+        <tr>
+          <th>Domain 1</th>
+          <th>Domain 2</th>
+          <th>Domain 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center; font-weight:500">Build Tools for Education</td>
+          <td style="text-align:center; font-weight:500">Tools for Democracy</td>
+          <td style="text-align:center; font-weight:500">Designing for Civic Change</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Participants choose one domain and pursue a real project within it, using small language models (Mistral or Bloom Science) rather than large commercial models wherever possible.</p>
+  </section>
+
+  <!-- IMPLEMENTATION PHASES -->
+  <section>
+    <h2>Implementation Phases</h2>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-num">Phase 1</span>
+        <span class="phase-title">Foundation</span>
+        <span class="phase-days">Days 1–5</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Recruit 5–10 civic technologists, designers, and community builders as participants</li>
+          <li>Run an orientation session covering guiding principles, tooling setup, and ethical framework</li>
+          <li>Each participant selects a project and completes a written proposal (#proposalphase)</li>
+          <li>Establish shared documentation channels (video diary format, open-source repo)</li>
+          <li>Baseline measurement: document current collaboration dependencies and skills</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-num">Phase 2</span>
+        <span class="phase-title">Build Sprint</span>
+        <span class="phase-days">Days 6–20</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Participants work independently using approved small language models</li>
+          <li>Daily or every-other-day video diary entries documenting progress, frustrations, and surprises</li>
+          <li>Weekly group check-ins to challenge first drafts and share findings (#goodvibing)</li>
+          <li>Track state of each project: #proposed → #ideated → #implemented</li>
+          <li>Document environmental and resource costs as they become visible</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-num">Phase 3</span>
+        <span class="phase-title">Evaluation</span>
+        <span class="phase-days">Days 21–27</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Participants complete evaluative testing on their own work using the shared rubric</li>
+          <li>Scorecard completion for each project against the two core criteria: Serves Humanity and Sustainable</li>
+          <li>Loss and gain accounting: document what was gained (digital prototype) and what was lost (direct collaboration, etc.)</li>
+          <li>Aggregate data across all participants for pattern analysis</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-block">
+      <div class="phase-header">
+        <span class="phase-num">Phase 4</span>
+        <span class="phase-title">Design Crit and Synthesis</span>
+        <span class="phase-days">Days 28–30</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Host a public design critique with reviewers of diverse expertise</li>
+          <li>Share video diaries and project outcomes openly</li>
+          <li>Synthesize findings into a publishable report</li>
+          <li>Issue a final verdict on the central question: Is vibecoding sufficient to set up future tooling for civic change?</li>
+        </ul>
+      </div>
+    </div>
+
+    <table style="margin-top:24px">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Duration</th>
+          <th>Key Activities</th>
+          <th>Deliverable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Days 1–5</td>
+          <td>Recruitment, orientation, project proposals, tooling setup</td>
+          <td>5–10 project proposals</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Days 6–20</td>
+          <td>Independent build sprints, daily video diaries, weekly group check-ins</td>
+          <td>In-progress prototypes + diaries</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Days 21–27</td>
+          <td>Evaluative testing, scorecard completion, loss/gain accounting</td>
+          <td>Completed scorecards per project</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Days 28–30</td>
+          <td>Public design crit, synthesis, final report</td>
+          <td>Published findings report</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- GUIDING PRINCIPLES -->
+  <section>
+    <h2>Guiding Principles</h2>
+    <p>Every decision made during this experiment is governed by the following principles:</p>
+
+    <div class="principle">
+      <div class="principle-title">Start with Tooling</div>
+      <p class="principle-body">At the outset, we are choosing to use small language models such as Mistral AI or Bloom Science. We also plan to build our own Small Language Model for Civic Tech.</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Second-Order Thinking</div>
+      <p class="principle-body">Before proceeding with any build decision, participants ask: Why does this benefit the community? What is the real cost of not doing this work? Is the harm of doing it greater than the harm of not doing it?</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Choose Evergreen</div>
+      <p class="principle-body">All work produced is made reusable and available to the broader community. No one should need to repeat this effort. Outputs are designed to be maintained and built upon, not abandoned.</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Challenge the First Draft</div>
+      <p class="principle-body">With an open-source mindset, we invite other builders to review, question, and push the work. No output is treated as final. Other builders are welcome to join #goodvibing activities and contribute critiques.</p>
+    </div>
+  </section>
+
+  <!-- ROLES -->
+  <section>
+    <h2>Roles and Responsibilities</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Responsibilities</th>
+          <th>Time Commitment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lead Organizer</td>
+          <td>Overall coordination, orientation facilitation, final report authorship</td>
+          <td>Full-time, 30 days</td>
+        </tr>
+        <tr>
+          <td>Participants (5–10)</td>
+          <td>Project selection, building, daily documentation, evaluation, design crit</td>
+          <td>~2–3 hrs/day</td>
+        </tr>
+        <tr>
+          <td>Crit Reviewers (3–5)</td>
+          <td>Attend final design critique, provide written feedback</td>
+          <td>Days 28–30 only</td>
+        </tr>
+        <tr>
+          <td>Open-Source Community</td>
+          <td>Challenge first drafts, contribute to #goodvibing, fork and reuse outputs</td>
+          <td>Ongoing / voluntary</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- DEFINITION OF SUCCESS -->
+  <section>
+    <h2>Definition of Success</h2>
+    <p>This experiment does not measure success by whether vibecoding is vindicated. Success is defined as:</p>
+    <ul>
+      <li>Honest, documented findings that the community can build on</li>
+      <li>At least one project reaching #implemented status</li>
+      <li>A reusable rubric and scorecard available to other civic tech builders</li>
+      <li>A published report that contributes to the ethical AI conversation from a designer-first, community-first perspective</li>
+      <li>Clarity on whether this path is worth continuing — or a well-reasoned case for why it is not</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-quote">If we're not part of the conversation, who is influencing and shaping this tool?</div>
+  </div>
+
+</div>
+</div><!-- /page-implementation -->
+
+<!-- PAGE: DEFINITION OF GOOD -->
+<div class="page-view" id="page-definition-of-good">
+<div class="page">
+  <div class="masthead">
+    <div class="masthead-eyebrow">Framework</div>
+    <h1>Definition of Good</h1>
+    <div class="meta-strip">
+      <span class="meta-tag">Framework</span>
+      <span class="meta-tag">Good Vibing</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>1. Write Your Argument</h2>
+    <p>Define your project's mission. When writing a POV statement, use the formula:</p>
+    <div class="callout">
+      <p>"We know this tool is good for [USER] because it fills a [NEED]. We have learned that this idea is helpful based on [INSIGHT]."</p>
+    </div>
+
+    <h2>2. Open call for civic tech builders to join the 30 day challenge</h2>
+
+    <ul>
+      <li>Participants work independently using approved small language models</li>
+      <li>Daily or every-other-day video diary entries documenting progress, frustrations, and surprises</li>
+      <li>Weekly group check-ins to challenge first drafts and share findings (#goodvibing)</li>
+      <li>Track state of each project: #proposed → #ideated → #implemented</li>
+    </ul>
+
+  </section>
+  <section>
+    <h2>3. Experiment Focus Areas</h2>
+    <p>Participants will concentrate their 30 days across three civic domains:</p>
+
+    <table class="focus-table">
+      <thead>
+        <tr>
+          <th>Domain 1</th>
+          <th>Domain 2</th>
+          <th>Domain 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center; font-weight:500">Build Tools for Education</td>
+          <td style="text-align:center; font-weight:500">Tools for Democracy</td>
+          <td style="text-align:center; font-weight:500">Designing for Civic Change</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Participants choose one domain and pursue a real project within it, using small language models (Mistral or Bloom Science) rather than large commercial models wherever possible.</p>
+  </section>
+
+</div>
+</div><!-- /page-definition-of-good -->
+
+<!-- PAGE: GUIDING PRINCIPLES -->
+<div class="page-view" id="page-guiding-principles">
+<div class="page">
+  <div class="masthead">
+    <div class="masthead-eyebrow">Framework</div>
+    <h1>Guiding Principles and Framework</h1>
+    <div class="meta-strip">
+      <span class="meta-tag">Framework</span>
+      <span class="meta-tag">Good Vibing</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>Principles</h2>
+
+    <div class="principle">
+      <div class="principle-title">Start with Tooling</div>
+      <p class="principle-body">At the outset, we are choosing to use small language models such as Mistral AI or Bloom Science. We also plan to build our own Small Language Model for Civic Tech.</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Second-Order Thinking</div>
+      <p class="principle-body">Ask why this benefits the community. Is there a real cost to not doing this work?</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Choose Evergreen</div>
+      <p class="principle-body">We make reusable work available to others so that no one needs to repeat the same effort.</p>
+    </div>
+
+    <div class="principle">
+      <div class="principle-title">Challenge the First Draft</div>
+      <p class="principle-body">With an open-source mindset, we invite other builders to join us in #goodvibing activities and push the work further.</p>
+    </div>
+  </section>
+</div>
+</div><!-- /page-guiding-principles -->
+
+<!-- PAGE: EVALUATION AND SCORING -->
+<div class="page-view" id="page-evaluation-scoring">
+<div class="page">
+  <div class="masthead">
+    <div class="masthead-eyebrow">Framework</div>
+    <h1>Evaluation and Scoring</h1>
+    <div class="meta-strip">
+      <span class="meta-tag">Framework</span>
+      <span class="meta-tag">Good Vibing</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>Conduct Evaluative Tests</h2>
+    <p>What is the rubric? Can we develop a way to measure the environmental impact of GoodVibing?</p>
+
+    <p>Design a data index for evaluation:</p>
+    <ul>
+      <li>Sustainable solutions</li>
+      <li>Craft and skill</li>
+      <li>Economic labor</li>
+      <li>Cognitive sovereignty</li>
+      <li>Mission-centricity</li>
+    </ul>
+
+  </section>
+
+  <section>
+    <h2>Create a Scorecard</h2>
+    <p>Define our scorecard and data index around two core criteria:</p>
+
+    <ul>
+      <li>We are looking to create a system of scoring work based on drafted areas: socio-cultural context, craft and skill, economic labor, cognitive sovereignty, mission-centricity.</li>
+      <li>Low-fidelity artifact could be a simple checklist or a way to assess an implementation plan md file. If builders proceed to vibecode a static site, we can ask them to complete the quiz, and share an approximation of a total impact score.</li>
+      <li>We can also measure by using and deploy guiding principles such as second order thinking etc. to help the user make better choices. (ie: Is it better tooling, encouraging more collaboration or providing opportunities to enlist freelance support to show how labor upskilling outweighs the speed of building.)</li>
+    </ul>
+
+  </section>
+
+  <section>
+    <h2>Environmental Impact Measurement</h2>
+    <p>Measuring the environmental cost of vibecoding is a core part of this experiment, not an afterthought. We aim to develop a reusable methodology for civic tech builders assessing the carbon and resource footprint of LLM-assisted work.</p>
+    <ul>
+      <li>Track model size and inference calls per project</li>
+      <li>Estimate compute cost using available emissions calculators</li>
+      <li>Compare against equivalent human-collaborator workflow</li>
+      <li>Publish findings as part of the Evergreen output so others can replicate the measurement</li>
+    </ul>
+  </section>
+</div>
+</div><!-- /page-evaluation-scoring -->
+
+<!-- PAGE: THE RUBRIC -->
+<div class="page-view" id="page-the-rubric">
+<div class="page">
+  <div class="masthead">
+    <div class="masthead-eyebrow">Framework</div>
+    <h1>Write the Narrative</h1>
+    <div class="meta-strip">
+      <span class="meta-tag">Framework</span>
+      <span class="meta-tag">Good Vibing</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>1. Write the Narrative</h2>
+  </section>
+
+  <section>
+    <h2>Three Honest Questions</h2>
+
+    <div class="q-row">
+      <span class="q-label">Q1</span>
+      <span class="q-text">Is there hope for this tool to be used for good?</span>
+    </div>
+    <div class="q-row">
+      <span class="q-label">Q2</span>
+      <span class="q-text">Is there a meaningful alternative to using it?</span>
+    </div>
+    <div class="q-row">
+      <span class="q-label">Q3</span>
+      <span class="q-text">Does the good outweigh the bad?</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Impact Phase Tracking</h2>
+    <p>Each project is tracked across three stages. Impact at each stage is assessed differently:</p>
+
+    <div class="track-strip">
+      <span class="track-tag"><span>#</span>proposed</span>
+      <span class="track-tag"><span>#</span>ideated</span>
+      <span class="track-tag"><span>#</span>implemented</span>
+    </div>
+
+    <ul>
+      <li><strong>#proposed</strong> — Value of the idea as articulated. Is the problem real and worth solving?</li>
+      <li><strong>#ideated</strong> — Value of the concept as designed. Is the solution coherent and community-informed?</li>
+      <li><strong>#implemented</strong> — Value of the thing as shipped. Does it reach people and create change?</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Loss and Gain Accounting</h2>
+    <p>Each participant documents a qualitative ledger at the close of the experiment. These are not presented as cancelling each other out — they are held in tension.</p>
+
+    <div class="ledger">
+      <div class="ledger-col">
+        <div class="ledger-label">Lost</div>
+        <ul>
+          <li>Direct human collaboration</li>
+          <li>Reliance on embodied expertise</li>
+          <li>Certain forms of creative ownership</li>
+        </ul>
+      </div>
+      <div class="ledger-col">
+        <div class="ledger-label">Gained</div>
+        <ul>
+          <li>Digital prototype</li>
+          <li>Speed of iteration</li>
+          <li>Access to building without a technical partner</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+</div><!-- /page-the-rubric -->
+
+</div><!-- /page-wrap -->
+</div><!-- /shell -->
+
+<script>
+  function showPage(id) {
+    // hide all pages
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    // show target
+    document.getElementById('page-' + id).classList.add('active');
+
+    // update sidebar active states
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    // map id to nav item text
+    const map = {
+      'implementation': 'Project Plan',
+      'definition-of-good': 'Definition of Good',
+      'guiding-principles': 'Guiding Principles',
+      'evaluation-scoring': 'Evaluation and Scoring',
+      'the-rubric': 'Write the Narrative'
+    };
+
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.textContent.trim() === map[id]) n.classList.add('active');
+    });
+
+    // auto-open submenu for framework pages
+    const frameworkPages = ['definition-of-good','guiding-principles','evaluation-scoring','the-rubric'];
+    if (frameworkPages.includes(id)) {
+      document.getElementById('framework-sub').classList.add('open');
+      document.getElementById('framework-parent').classList.add('open');
+    }
+  }
+
+  function toggleSub(el) {
+    const sub = document.getElementById('framework-sub');
+    sub.classList.toggle('open');
+    el.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
