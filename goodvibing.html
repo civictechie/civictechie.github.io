@@ -564,7 +564,6 @@
     <a class="nav-item" onclick="showPage('definition-of-good')">Definition of Good</a>
     <a class="nav-item" onclick="showPage('guiding-principles')">Guiding Principles</a>
     <a class="nav-item" onclick="showPage('evaluation-scoring')">Evaluation and Scoring</a>
-    <a class="nav-item" onclick="showPage('the-rubric')">Write the Narrative</a>
   </div>
 </nav>
 
@@ -881,6 +880,23 @@
     <p>Participants choose one domain and pursue a real project within it, using small language models (Mistral or Bloom Science) rather than large commercial models wherever possible.</p>
   </section>
 
+  <section>
+    <h2>4. Impact Phase Tracking</h2>
+    <p>Each project is tracked across three stages. Impact at each stage is assessed differently:</p>
+
+    <div class="track-strip">
+      <span class="track-tag"><span>#</span>proposed</span>
+      <span class="track-tag"><span>#</span>ideated</span>
+      <span class="track-tag"><span>#</span>implemented</span>
+    </div>
+
+    <ul>
+      <li><strong>#proposed</strong> — Value of the idea as articulated. Is the problem real and worth solving?</li>
+      <li><strong>#ideated</strong> — Value of the concept as designed. Is the solution coherent and community-informed?</li>
+      <li><strong>#implemented</strong> — Value of the thing as shipped. Does it reach people and create change?</li>
+    </ul>
+  </section>
+
 </div>
 </div><!-- /page-definition-of-good -->
 
@@ -962,69 +978,6 @@
   </section>
 
   <section>
-    <h2>Environmental Impact Measurement</h2>
-    <p>Measuring the environmental cost of vibecoding is a core part of this experiment, not an afterthought. We aim to develop a reusable methodology for civic tech builders assessing the carbon and resource footprint of LLM-assisted work.</p>
-    <ul>
-      <li>Track model size and inference calls per project</li>
-      <li>Estimate compute cost using available emissions calculators</li>
-      <li>Compare against equivalent human-collaborator workflow</li>
-      <li>Publish findings as part of the Evergreen output so others can replicate the measurement</li>
-    </ul>
-  </section>
-</div>
-</div><!-- /page-evaluation-scoring -->
-
-<!-- PAGE: THE RUBRIC -->
-<div class="page-view" id="page-the-rubric">
-<div class="page">
-  <div class="masthead">
-    <div class="masthead-eyebrow">Framework</div>
-    <h1>Write the Narrative</h1>
-    <div class="meta-strip">
-      <span class="meta-tag">Framework</span>
-      <span class="meta-tag">Good Vibing</span>
-    </div>
-  </div>
-
-  <section>
-    <h2>1. Write the Narrative</h2>
-  </section>
-
-  <section>
-    <h2>Three Honest Questions</h2>
-
-    <div class="q-row">
-      <span class="q-label">Q1</span>
-      <span class="q-text">Is there hope for this tool to be used for good?</span>
-    </div>
-    <div class="q-row">
-      <span class="q-label">Q2</span>
-      <span class="q-text">Is there a meaningful alternative to using it?</span>
-    </div>
-    <div class="q-row">
-      <span class="q-label">Q3</span>
-      <span class="q-text">Does the good outweigh the bad?</span>
-    </div>
-  </section>
-
-  <section>
-    <h2>Impact Phase Tracking</h2>
-    <p>Each project is tracked across three stages. Impact at each stage is assessed differently:</p>
-
-    <div class="track-strip">
-      <span class="track-tag"><span>#</span>proposed</span>
-      <span class="track-tag"><span>#</span>ideated</span>
-      <span class="track-tag"><span>#</span>implemented</span>
-    </div>
-
-    <ul>
-      <li><strong>#proposed</strong> — Value of the idea as articulated. Is the problem real and worth solving?</li>
-      <li><strong>#ideated</strong> — Value of the concept as designed. Is the solution coherent and community-informed?</li>
-      <li><strong>#implemented</strong> — Value of the thing as shipped. Does it reach people and create change?</li>
-    </ul>
-  </section>
-
-  <section>
     <h2>Loss and Gain Accounting</h2>
     <p>Each participant documents a qualitative ledger at the close of the experiment. These are not presented as cancelling each other out — they are held in tension.</p>
 
@@ -1047,8 +1000,20 @@
       </div>
     </div>
   </section>
+
+  <section>
+    <h2>Environmental Impact Measurement</h2>
+    <p>Measuring the environmental cost of vibecoding is a core part of this experiment, not an afterthought. We aim to develop a reusable methodology for civic tech builders assessing the carbon and resource footprint of LLM-assisted work.</p>
+    <ul>
+      <li>Track model size and inference calls per project</li>
+      <li>Estimate compute cost using available emissions calculators</li>
+      <li>Compare against equivalent human-collaborator workflow</li>
+      <li>Publish findings as part of the Evergreen output so others can replicate the measurement</li>
+    </ul>
+  </section>
 </div>
-</div><!-- /page-the-rubric -->
+</div><!-- /page-evaluation-scoring -->
+
 
 </div><!-- /page-wrap -->
 </div><!-- /shell -->
@@ -1068,8 +1033,7 @@
       'implementation': 'Project Plan',
       'definition-of-good': 'Definition of Good',
       'guiding-principles': 'Guiding Principles',
-      'evaluation-scoring': 'Evaluation and Scoring',
-      'the-rubric': 'Write the Narrative'
+      'evaluation-scoring': 'Evaluation and Scoring'
     };
 
     document.querySelectorAll('.nav-item').forEach(n => {
@@ -1077,7 +1041,7 @@
     });
 
     // auto-open submenu for framework pages
-    const frameworkPages = ['definition-of-good','guiding-principles','evaluation-scoring','the-rubric'];
+    const frameworkPages = ['definition-of-good','guiding-principles','evaluation-scoring'];
     if (frameworkPages.includes(id)) {
       document.getElementById('framework-sub').classList.add('open');
       document.getElementById('framework-parent').classList.add('open');
